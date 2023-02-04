@@ -1,10 +1,10 @@
 <template>
     <div class="merger">
         <div class="merger-input">
-            <SampleContainer :id="id  + '_' + '1'" :canSpawn="false" :canDrop="true" :maxSamples="5"/>
+            <SampleContainer :id="id  + '_' + '1'" containerType="merge-in" :pairId="id + '_' + '2'"/>
         </div>
         <div class="merger-output">
-            <SampleContainer :id="id + '_' + '2'" :canSpawn="false" :canDrop="false" :maxSamples="1"/>
+            <SampleContainer :id="id + '_' + '2'" containerType="merge-out"/>
         </div>
     </div>
 </template>
@@ -35,17 +35,23 @@ export default {
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
 }
 
 .merger-input {
     display: flex;
-    flex-grow: 4;
-    padding-right: 10px;
+    /* width: 75%; */
+    padding-right: 5px;
+    min-height: 6em;
+    width: 34vw;
+    min-width: 34vw;
 }
 
 .merger-output {
     display: flex;
-    flex-grow: 1
+    /* width: 25%; */
+    min-height: 6em;
+    width: 14vw;
+    min-width: 7em;
 }
 </style>

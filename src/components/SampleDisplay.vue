@@ -6,7 +6,8 @@
         v-bind:key="x"
         class="displayCell"
       >
-        {{ this.samples.sample(this.parent, this.uid).parts[x - 1][y - 1] }}
+        <PartDisplay :partId="this.samples.sample(this.parent, this.uid).parts[x - 1][y - 1]" :opacity="this.opacity"/>
+        <!-- {{ this.samples.sample(this.parent, this.uid).parts[x - 1][y - 1] }} -->
       </div>
     </div>
   </div>
@@ -15,6 +16,7 @@
 <script>
 import { samplesStore } from "../stores/samplesStore";
 import { settingsStore } from "../stores/settings";
+import PartDisplay from "@/components/PartDisplay.vue";
 
 export default {
   name: "SampleDisplay",
@@ -22,17 +24,24 @@ export default {
     parent: String,
     uid: String,
   },
+  components: {
+    PartDisplay,
+  },
   setup() {
     const samples = samplesStore();
     const settings = settingsStore();
     return { samples, settings };
   },
+  computed: {
+    opacity() {
+      return this.samples.sample(this.parent, this.uid).lives / this.settings.getMaxLives
+    }
+  }
 };
 </script>
   
 <style scoped>
 .sampleDisplay {
-  background-color: chocolate;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -41,16 +50,19 @@ export default {
   border: 2px solid #5c8d17;
   padding: 1px;
   margin: 2px;
+  width: 4em;
+  height: 4em;
 }
 
 .displayRow {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  flex-grow: 1
 }
 
 .displayCell {
-  width: 1em;
-  height: 1em;
+  
+  flex-grow: 1
 }
 </style>

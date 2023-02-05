@@ -1,5 +1,5 @@
 <template>
-  <div class="sampleDisplay">
+  <div class="sampleDisplay" :style="{'border-color': boarderColor}" @click='click()'>
     <div v-for="y in this.settings.getSize.y" v-bind:key="y" class="displayRow">
       <div
         v-for="x in this.settings.getSize.x"
@@ -35,6 +35,18 @@ export default {
   computed: {
     opacity() {
       return this.samples.sample(this.parent, this.uid).lives / this.settings.getMaxLives
+    },
+    boarderColor() {
+      if(this.samples.sample(this.parent, this.uid).selected) {
+        return 'red'
+      } else {
+        return '#5c8d17'
+      }
+    }
+  },
+  methods: {
+    click() {
+      this.samples.toggleSelect(this.parent, this.uid)
     }
   }
 };
@@ -47,7 +59,9 @@ export default {
   justify-content: center;
   box-sizing: border-box;
   border-radius: 5px;
-  border: 2px solid #5c8d17;
+  border-style: solid;
+  border-width: 2px;
+  /* border: #5c8d17; */
   padding: 1px;
   margin: 2px;
   width: 4em;

@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { settingsStore } from './settings'
 
 function createPart(parts, parentId, uid) {
-    return {"parts": parts, "parentId": parentId, "uid": uid, "lives": settingsStore().getMaxLives}
+    return {"parts": parts, "parentId": parentId, "uid": uid, "lives": settingsStore().getMaxLives, "selected": false}
 }
 
 function generatePart(parts) {
@@ -49,7 +49,7 @@ function mergeSample(samples) {
 }
 
 export const samplesStore = defineStore('samples', {
-    state: () => ({allSamples:{}, count:0, storeCapacity:{}}),
+    state: () => ({allSamples:{}, count:0, storeCapacity:{}, selected:{'parentId':-1, "uid":-1} }),
     getters: {
         containerSamples: (state) => {
             return (containerId) => state.allSamples[containerId]
@@ -95,15 +95,31 @@ export const samplesStore = defineStore('samples', {
                 this.allSamples[newContainerId][newId] = this.allSamples[containerId][uid]
                 this.allSamples[newContainerId][newId]["parentId"] = newContainerId
                 this.allSamples[newContainerId][newId]["uid"] = newId
+                this.allSamples[newContainerId][newId]["selected"] = false
                 delete this.allSamples[containerId][uid]
                 
+            }
+        },
+        moveSelected(newContainerId) {
+            if(this.selected.parentId != -1 && this.selected.parentId != newContainerId) {
+                this.move(this.selected.parentId, this.selected.uid, newContainerId)
+                this.selected.parentId = -1
+                this.selected.uid = -1
             }
         },
         remove(containerId, uid) {
             delete this.allSamples[containerId][uid]
         },
+        removeSelected() {
+            if(this.selected.parentId != -1){
+                delete this.allSamples[this.selected.parentId][this.selected.uid]
+                this.selected.parentId = -1
+                this.selected.uid = -1
+            }
+        },
         merge(containerId, destId) {
-            if (Object.keys(this.allSamples[destId]).length < this.storeCapacity[destId] && Object.keys(this.allSamples[containerId]).length > 0) {
+            const settings = settingsStore()
+            if (Object.keys(this.allSamples[destId]).length < this.storeCapacity[destId] && Object.keys(this.allSamples[containerId]).length >= settings.getMergeInMin) {
                 
                 let samplesParts = new Array(Object.keys(this.allSamples[containerId]).length);
 
@@ -120,6 +136,19 @@ export const samplesStore = defineStore('samples', {
                 let newSample = mergeSample(samplesParts)
                 this.allSamples[destId][this.count.toString()] = createPart(newSample, destId, this.count.toString())
                 this.count++
+            }
+        },
+        toggleSelect(containerId, uid) {
+            if(this.selected.parentId != -1) {
+                this.allSamples[this.selected.parentId][this.selected.uid].selected = false
+            }
+            if(this.selected.parentId === containerId && this.selected.uid == uid) {
+                this.selected.parentId = -1
+                this.selected.uid = -1
+            } else {
+                this.selected.parentId = containerId
+                this.selected.uid = uid
+                this.allSamples[containerId][uid].selected = true
             }
         }
     },

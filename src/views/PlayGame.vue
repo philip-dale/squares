@@ -55,6 +55,8 @@ export default {
   min-height: 6em;
   width: 49vw;
   min-width: 49vw;
+  height: 16vh;
+  min-height: 16vh;
 }
 
 .spawn {

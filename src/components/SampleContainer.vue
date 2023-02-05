@@ -5,7 +5,8 @@
     @dragover="preventDrop($event)"
     @dragenter="preventDrop($event)"
     @dblclick="dbclick()"
-    :style="{'align-items':alignItems}"
+    @click="click()"
+    :style="{'align-items':alignItems, 'align-content':alignItems, 'justify-content':alignItems}"
   >
     <div
       v-for="s in this.samples.containerSamples(this.id)"
@@ -108,6 +109,13 @@ export default {
           return
       }
     },
+    click() {
+      if (this.destroy) {
+        this.samples.removeSelected();
+      } else {
+        this.samples.moveSelected(this.id)
+      }
+    },
     merge() {
       this.samples.merge(this.id, this.pairId);
     },
@@ -135,8 +143,7 @@ export default {
   padding: 10px;
   display: flex;
   flex-wrap: wrap;
-  align-content: flex-start;
-  justify-content: center;
-  /* align-items: center; */
+  /* align-content: flex-start; */
+  /* justify-content: center; */
 }
 </style>

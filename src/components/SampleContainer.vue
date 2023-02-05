@@ -112,7 +112,7 @@ export default {
     click() {
       if (this.destroy) {
         this.samples.removeSelected();
-      } else {
+      } else if (this.samples.hasSpace(this.id)){
         this.samples.moveSelected(this.id)
       }
     },

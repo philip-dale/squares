@@ -6,8 +6,9 @@
         v-bind:key="x"
         class="displayCell"
       >
-        <PartDisplay :partId="this.samples.sample(this.parent, this.uid).parts[x - 1][y - 1]" :opacity="this.opacity"/>
-        <!-- {{ this.samples.sample(this.parent, this.uid).parts[x - 1][y - 1] }} -->
+        <PartDisplay v-if="ghostId === -1" :partId="this.samples.sample(this.parent, this.uid).parts[x - 1][y - 1]" :opacity="this.opacity"/>
+        <PartDisplay v-else :partId="ghostId" :opacity="this.opacity"/>
+
       </div>
     </div>
   </div>
@@ -16,6 +17,7 @@
 <script>
 import { samplesStore } from "../stores/samplesStore";
 import { settingsStore } from "../stores/settings";
+import { gameStateStore } from "../stores/gameState"
 import PartDisplay from "@/components/PartDisplay.vue";
 
 export default {
@@ -23,6 +25,10 @@ export default {
   props: {
     parent: String,
     uid: String,
+    ghostId: {
+      type: Number,
+      default: -1,
+    }
   },
   components: {
     PartDisplay,
@@ -30,23 +36,36 @@ export default {
   setup() {
     const samples = samplesStore();
     const settings = settingsStore();
-    return { samples, settings };
+    const gameState = gameStateStore();
+    return { samples, settings, gameState };
   },
   computed: {
     opacity() {
-      return this.samples.sample(this.parent, this.uid).lives / this.settings.getMaxLives
+      if(this.ghostId === -1) {
+        return this.samples.sample(this.parent, this.uid).lives / this.settings.getMaxLives
+      } else {
+        if(this.gameState.getSamplesCompleted[this.ghostId.toString()] > 0) {
+          return 1
+        } else {
+          return 0.2
+        }
+      }
+      
     },
     boarderColor() {
-      if(this.samples.sample(this.parent, this.uid).selected) {
-        return 'red'
-      } else {
-        return '#5c8d17'
+      if(this.ghostId === -1) {
+        if(this.samples.sample(this.parent, this.uid).selected) {
+          return 'red'
+        } 
       }
+      return '#5c8d17'
     }
   },
   methods: {
     click() {
-      this.samples.toggleSelect(this.parent, this.uid)
+      if(this.ghostId === -1) {
+        this.samples.toggleSelect(this.parent, this.uid)
+      }
     }
   }
 };
@@ -61,7 +80,6 @@ export default {
   border-radius: 5px;
   border-style: solid;
   border-width: 2px;
-  /* border: #5c8d17; */
   padding: 1px;
   margin: 2px;
   width: 4em;
@@ -76,7 +94,6 @@ export default {
 }
 
 .displayCell {
-  
   flex-grow: 1
 }
 </style>

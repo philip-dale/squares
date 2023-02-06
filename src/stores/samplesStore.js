@@ -28,6 +28,20 @@ function generatePart(parts) {
 
 }
 
+function isPureSample(parts) {
+    const settings = settingsStore()
+    const size = settings.getSize
+    const compare = parts[0][0]
+    for (let x = 0; x < size.x; x++) {
+        for (let y = 0; y < size.y; y++) {
+            if (compare != parts[x][y]) {
+                return -1
+            }
+        }
+    }
+    return compare
+}
+
 function mergeSample(samples) {
     const sampleCount = samples.length
     const settings = settingsStore()
@@ -63,6 +77,17 @@ export const samplesStore = defineStore('samples', {
                     return true
                 }
                 return Object.keys(state.allSamples[containerId]).length < state.storeCapacity[containerId]
+            }
+        },
+        pureVal: (state) => {
+            return (containerId, uid) => isPureSample(state.allSamples[containerId][uid].parts)
+        },
+        selectedPureVal: (state) => {
+            return () => {
+                if(state.selected.parentId != -1) {
+                    return isPureSample(state.allSamples[state.selected.parentId][state.selected.uid].parts)
+                }
+                return -1
             }
         }
     },

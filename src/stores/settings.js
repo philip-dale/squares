@@ -2,8 +2,8 @@ import { defineStore } from 'pinia'
 
 export const settingsStore = defineStore('settings', {
     state: () => ({ 
-        size: { x: 2, y: 3 }, 
-        maxParts: 2, 
+        size: { x: 2, y: 2 }, 
+        maxParts: 3, 
         colourList: ['#ff0000', '#40ff00', '#0040ff', '#ff00ff', '#ffbf00', '#449c90', '#8000ff', '#00ff80', '#4420db', '#bb639c'],
         maxLives: 3,
         spawnMax: 49,
@@ -11,6 +11,7 @@ export const settingsStore = defineStore('settings', {
         mergeInMin: 3,
         mergeOutMax: 1,
         sinkMax: -1,
+        gameType: "standard",
     }),
     getters: {
         getSize: (state) => {
@@ -41,6 +42,9 @@ export const settingsStore = defineStore('settings', {
         },
         getMergeInMin: (state) => {
             return state.mergeInMin
+        },
+        getGameType: (state) => {
+            return state.gameType
         },
     },
 })

@@ -8,13 +8,23 @@
     @click="click()"
     :style="{'align-items':alignItems, 'align-content':alignItems, 'justify-content':alignItems}"
   >
-    <div
-      v-for="s in this.samples.containerSamples(this.id)"
-      v-bind:key="s"
-      draggable="true"
-      @dragstart="startDrag($event, s)"
-    >
-      <SampleDisplay :parent="s.parentId" :uid="s.uid" />
+  <div class="ifContainer" v-if="showGhosts" >
+      <div
+        v-for="s in this.settings.getMaxParts"
+        v-bind:key="s"
+      >
+        <SampleDisplay parent="" uid="" :ghostId="s-1"/>
+      </div>
+    </div>
+    <div class="ifContainer" v-else>
+      <div
+        v-for="s in this.samples.containerSamples(this.id)"
+        v-bind:key="s"
+        draggable="true"
+        @dragstart="startDrag($event, s)"
+      >
+        <SampleDisplay :parent="s.parentId" :uid="s.uid" />
+      </div>
     </div>
   </div>
 </template>
@@ -22,6 +32,7 @@
 <script>
 import { samplesStore } from "../stores/samplesStore";
 import { settingsStore } from "../stores/settings";
+import { gameStateStore } from "../stores/gameState"
 import SampleDisplay from "@/components/SampleDisplay.vue";
 
 export default {
@@ -44,7 +55,8 @@ export default {
   setup() {
     const samples = samplesStore();
     const settings = settingsStore();
-    return { samples, settings };
+    const gameState = gameStateStore();
+    return { samples, settings, gameState };
   },
   created() {
     this.samples.init(this.id, this.maxSamples);
@@ -81,6 +93,9 @@ export default {
         return 'flex-start'
       }
       return 'center'
+    },
+    showGhosts() {
+      return this.containerType === "sink" && this.settings.getGameType === "standard"
     }
   },
   methods: {
@@ -93,8 +108,15 @@ export default {
     onDrop(evt, newParent) {
       const uid = evt.dataTransfer.getData("uid");
       const parentId = evt.dataTransfer.getData("parentId");
+      if(uid == "" ) {
+        return
+      }
+      const pureVal = this.samples.pureVal(parentId, uid)
       if (this.destroy) {
-        this.samples.remove(parentId, uid);
+        if(pureVal != -1) {
+          this.gameState.addCompletedSample(pureVal)
+          this.samples.remove(parentId, uid);
+        }
       } else {
         this.samples.move(parentId, uid, newParent);
       }
@@ -110,8 +132,12 @@ export default {
       }
     },
     click() {
+      const pureVal = this.samples.selectedPureVal()
       if (this.destroy) {
-        this.samples.removeSelected();
+        if(pureVal != -1) {
+          this.gameState.addCompletedSample(pureVal)
+          this.samples.removeSelected();
+        }
       } else if (this.samples.hasSpace(this.id)){
         this.samples.moveSelected(this.id)
       }
@@ -143,7 +169,11 @@ export default {
   padding: 10px;
   display: flex;
   flex-wrap: wrap;
-  /* align-content: flex-start; */
-  /* justify-content: center; */
 }
+
+.ifContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 </style>

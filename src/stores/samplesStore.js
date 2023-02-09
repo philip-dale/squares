@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 
 import { settingsStore } from './settings'
+import { gameStateStore } from './gameState'
 
 function createPart(parts, parentId, uid) {
     return {"parts": parts, "parentId": parentId, "uid": uid, "lives": settingsStore().getMaxLives, "selected": false}
@@ -79,6 +80,9 @@ export const samplesStore = defineStore('samples', {
                 return Object.keys(state.allSamples[containerId]).length < state.storeCapacity[containerId]
             }
         },
+        getSelected: (state) => {
+            return state.selected
+        },
         pureVal: (state) => {
             return (containerId, uid) => isPureSample(state.allSamples[containerId][uid].parts)
         },
@@ -89,7 +93,36 @@ export const samplesStore = defineStore('samples', {
                 }
                 return -1
             }
-        }
+        },
+        canSpawn: () => {
+            return (containerType) => {
+                switch(containerType) {
+                case "spawn":
+                    return true
+                }
+                return false
+            }
+        },
+        canMoveTo: () => {
+            return (containerType) => {
+                switch(containerType) {
+                case "spawn":
+                case "merge-in":
+                case "sink":
+                    return true
+                }
+                return false
+            }
+        },
+        canDestroy: () => {
+            return (containerType) => {
+                switch(containerType) {
+                case "sink":
+                    return true
+                }
+                return false
+            }
+        },
     },
     actions: {
         init(containerId, capacity) {
@@ -130,6 +163,18 @@ export const samplesStore = defineStore('samples', {
                 this.move(this.selected.parentId, this.selected.uid, newContainerId)
                 this.selected.parentId = -1
                 this.selected.uid = -1
+            }
+        },
+        moveSelectedToContainer(newContainerType, newContainerId) {
+            let gameState = gameStateStore()
+            const pureVal = this.selectedPureVal()
+            if (this.canDestroy(newContainerType)) {
+                if(pureVal != -1) {
+                    gameState.addCompletedSample(pureVal)
+                    this.samples.removeSelected();
+                }
+            } else if(this.hasSpace(newContainerId)){
+                this.moveSelected(newContainerId)
             }
         },
         remove(containerId, uid) {

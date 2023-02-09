@@ -1,30 +1,30 @@
 <template>
   <div
     class="sampleContainer"
-    @drop="onDrop($event, this.id)"
+    @drop="onDrop()"
     @dragover="preventDrop($event)"
     @dragenter="preventDrop($event)"
     @dblclick="dbclick()"
     @click="click()"
     :style="{'align-items':alignItems, 'align-content':alignItems, 'justify-content':alignItems}"
   >
-  <div class="ifContainer" v-if="showGhosts" >
-      <div
+    <div class="ifContainer" v-if="showGhosts" >
+      <SampleDisplay
         v-for="s in this.settings.getMaxParts"
         v-bind:key="s"
-      >
-        <SampleDisplay parent="" uid="" :ghostId="s-1"/>
-      </div>
+        parent="" uid="" 
+        :ghostId="s-1"
+      />
     </div>
     <div class="ifContainer" v-else>
-      <div
+      <SampleDisplay
         v-for="s in this.samples.containerSamples(this.id)"
         v-bind:key="s"
         draggable="true"
-        @dragstart="startDrag($event, s)"
-      >
-        <SampleDisplay :parent="s.parentId" :uid="s.uid" />
-      </div>
+        @dragstart="startDrag(s)"
+        :parent="s.parentId"
+        :uid="s.uid" 
+      />
     </div>
   </div>
 </template>
@@ -34,6 +34,7 @@ import { samplesStore } from "../stores/samplesStore";
 import { settingsStore } from "../stores/settings";
 import { gameStateStore } from "../stores/gameState"
 import SampleDisplay from "@/components/SampleDisplay.vue";
+
 
 export default {
   name: "SampleContainer",
@@ -63,27 +64,13 @@ export default {
   },
   computed: {
     canSpawn() {
-      switch(this.containerType) {
-        case "spawn":
-          return true
-      }
-      return false
+      return this.samples.canSpawn(this.containerType)
     },
-    canDrop() {
-      switch(this.containerType) {
-        case "spawn":
-        case "merge-in":
-        case "sink":
-          return true
-      }
-      return false
+    canMoveTo() {
+      return this.samples.canMoveTo(this.containerType)
     },
     destroy(){
-      switch(this.containerType) {
-        case "sink":
-          return true
-      }
-      return false
+      return this.samples.canDestroy(this.containerType)
     },
     maxSamples() {
       return this.settings.getContainerMax(this.containerType)
@@ -99,51 +86,24 @@ export default {
     }
   },
   methods: {
-    startDrag(evt, sample) {
-      evt.dataTransfer.dropEffect = "move";
-      evt.dataTransfer.effectAllowed = "move";
-      evt.dataTransfer.setData("uid", sample.uid);
-      evt.dataTransfer.setData("parentId", sample.parentId);
-    },
-    onDrop(evt, newParent) {
-      const uid = evt.dataTransfer.getData("uid");
-      const parentId = evt.dataTransfer.getData("parentId");
-      if(uid == "" ) {
-        return
-      }
-      const pureVal = this.samples.pureVal(parentId, uid)
-      if (this.destroy) {
-        if(pureVal != -1) {
-          this.gameState.addCompletedSample(pureVal)
-          this.samples.remove(parentId, uid);
-        }
-      } else {
-        this.samples.move(parentId, uid, newParent);
-      }
-    },
     dbclick() {
       switch(this.containerType) {
         case "spawn":
           this.spawn()
           return
         case "merge-in":
-          this.merge()
+        this.samples.merge(this.id, this.pairId);
           return
       }
     },
-    click() {
-      const pureVal = this.samples.selectedPureVal()
-      if (this.destroy) {
-        if(pureVal != -1) {
-          this.gameState.addCompletedSample(pureVal)
-          this.samples.removeSelected();
-        }
-      } else if (this.samples.hasSpace(this.id)){
-        this.samples.moveSelected(this.id)
-      }
+    startDrag(sample) {
+      this.samples.toggleSelect(sample.parentId, sample.uid)
     },
-    merge() {
-      this.samples.merge(this.id, this.pairId);
+    onDrop() {
+      this.samples.moveSelectedToContainer(this.containerType, this.id)
+    },
+    click() {
+      this.samples.moveSelectedToContainer(this.containerType, this.id)
     },
     spawn() {
       if (this.canSpawn && this.samples.hasSpace(this.id)) {
@@ -151,7 +111,7 @@ export default {
       }
     },
     preventDrop(evt) {
-      if (this.canDrop && this.samples.hasSpace(this.id)) {
+      if (this.canMoveTo && this.samples.hasSpace(this.id)) {
         evt.preventDefault();
       }
     },

@@ -66,7 +66,10 @@ export default {
       if(this.ghostId === -1) {
         this.samples.toggleSelect(this.parent, this.uid)
       }
-    }
+    },
+    startDrag(evt) {
+      console.log("startDrag", evt)
+    },
   }
 };
 </script>

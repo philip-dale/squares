@@ -171,7 +171,7 @@ export const samplesStore = defineStore('samples', {
             if (this.canDestroy(newContainerType)) {
                 if(pureVal != -1) {
                     gameState.addCompletedSample(pureVal)
-                    this.samples.removeSelected();
+                    this.removeSelected();
                 }
             } else if(this.hasSpace(newContainerId)){
                 this.moveSelected(newContainerId)

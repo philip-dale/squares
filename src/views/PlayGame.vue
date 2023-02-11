@@ -35,12 +35,11 @@ export default {
   margin-left: 0px;
 }
 .stores {
-  /* width: 50%; */
+  width: 50%;
   padding: 5px;
 }
 
 .mergers {
-  /* width: 50%; */
   padding: 5px;
   display: flex;
   flex-direction: column;
@@ -60,8 +59,6 @@ export default {
 }
 
 .spawn {
-  /* height: 32.6em; */
-  /* min-height: 32.6em; */
   width: 49vw;
   min-width: 49vw;
 }

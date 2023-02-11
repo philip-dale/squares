@@ -9,6 +9,14 @@ export const gameStateStore = defineStore('gameState', {
         getSamplesCompleted: (state) => {
             return state.samplesCompleted
         },
+        getTotalCompleted: (state) => {
+            const settings = settingsStore()
+            let total = 0
+            for(let i=0; i<settings.getMaxParts; i++) {
+                total += state.samplesCompleted[i.toString()]
+            }
+            return total
+        }
     },
     actions: {
         reset() {

@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useCookies } from "vue3-cookies";
 
 export const settingsStore = defineStore('settings', {
     state: () => ({ 
@@ -47,4 +48,14 @@ export const settingsStore = defineStore('settings', {
             return state.gameType
         },
     },
+    actions : {
+        setCookie() {
+            const {cookies} = useCookies();
+            cookies.set("settings_state", this, Infinity, null, null, true, 'Strict')
+        },
+        clearCookie() {
+            const {cookies} = useCookies();
+            cookies.remove("settings_state")
+        },
+    }
 })

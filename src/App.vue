@@ -1,7 +1,8 @@
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/about">About</router-link> |
+    <router-link to="/settings">Settings</router-link>
   </nav>
   <div class="mainview">
     <router-view/>
@@ -14,7 +15,7 @@ import { gameStateStore } from "./stores/gameState"
 export default {
   setup() {
     const gameState = gameStateStore();
-    gameState.reset()
+    gameState.init()
     return {gameState };
   },
 }

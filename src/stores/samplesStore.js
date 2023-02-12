@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-
 import { settingsStore } from './settings'
 import { gameStateStore } from './gameState'
+import { useCookies } from "vue3-cookies";
 
 function createPart(parts, parentId, uid) {
     return {"parts": parts, "parentId": parentId, "uid": uid, "lives": settingsStore().getMaxLives, "selected": false}
@@ -126,10 +126,36 @@ export const samplesStore = defineStore('samples', {
     },
     actions: {
         init(containerId, capacity) {
-            if(!(containerId in this.allSamples )) {
-                this.allSamples[containerId] = {}
-                this.storeCapacity[containerId] = capacity
+            const {cookies} = useCookies();
+            if(cookies.isKey("store_state") ){
+                this.count = cookies.get("store_state").count
             }
+
+            if(!(containerId in this.allSamples )) {
+                if(cookies.isKey("store_state") && Object.keys(cookies.get("store_state").allSamples).includes(containerId)){
+                    this.allSamples[containerId] = cookies.get("store_state").allSamples[containerId]
+                    this.storeCapacity[containerId] = cookies.get("store_state").storeCapacity[containerId]
+                } else {
+                    this.allSamples[containerId] = {}
+                    this.storeCapacity[containerId] = capacity
+                }
+            }
+        },
+        reset() {
+            for (const key of Object.keys(this.allSamples)) {
+                this.allSamples[key] = {}
+            }
+            this.count = 0, 
+            this.selected = {'parentId':-1, "uid":-1}
+            this.setCookie()
+        },
+        setCookie() {
+            const {cookies} = useCookies();
+            cookies.set("store_state", this, Infinity, null, null, true, 'Strict')
+        },
+        clearCookie() {
+            const {cookies} = useCookies();
+            cookies.remove("store_state")
         },
         spawn(containerId) {
             const settings = settingsStore()
@@ -144,6 +170,7 @@ export const samplesStore = defineStore('samples', {
 
             this.allSamples[containerId][this.count.toString()] = createPart(parts, containerId, this.count.toString())
             this.count++
+            this.setCookie()
         },
         move(containerId, uid, newContainerId) {
             if(containerId != newContainerId) {
@@ -155,7 +182,7 @@ export const samplesStore = defineStore('samples', {
                 this.allSamples[newContainerId][newId]["uid"] = newId
                 this.allSamples[newContainerId][newId]["selected"] = false
                 delete this.allSamples[containerId][uid]
-                
+                this.setCookie()
             }
         },
         moveSelected(newContainerId) {
@@ -163,6 +190,7 @@ export const samplesStore = defineStore('samples', {
                 this.move(this.selected.parentId, this.selected.uid, newContainerId)
                 this.selected.parentId = -1
                 this.selected.uid = -1
+                this.setCookie()
             }
         },
         moveSelectedToContainer(newContainerType, newContainerId) {
@@ -176,15 +204,18 @@ export const samplesStore = defineStore('samples', {
             } else if(this.hasSpace(newContainerId)){
                 this.moveSelected(newContainerId)
             }
+            this.setCookie()
         },
         remove(containerId, uid) {
             delete this.allSamples[containerId][uid]
+            this.setCookie()
         },
         removeSelected() {
             if(this.selected.parentId != -1){
                 delete this.allSamples[this.selected.parentId][this.selected.uid]
                 this.selected.parentId = -1
                 this.selected.uid = -1
+                this.setCookie()
             }
         },
         merge(containerId, destId) {
@@ -206,6 +237,7 @@ export const samplesStore = defineStore('samples', {
                 let newSample = mergeSample(samplesParts)
                 this.allSamples[destId][this.count.toString()] = createPart(newSample, destId, this.count.toString())
                 this.count++
+                this.setCookie()
             }
         },
         toggleSelect(containerId, uid) {
@@ -220,6 +252,7 @@ export const samplesStore = defineStore('samples', {
                 this.selected.uid = uid
                 this.allSamples[containerId][uid].selected = true
             }
+            this.setCookie()
         }
     },
 })

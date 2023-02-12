@@ -20,9 +20,11 @@ export default {
   },
   methods: {
     clearDataBtn() {
-      this.samples.reset()
       this.gameState.reset()
+      this.gameState.clearCookie()
+      this.samples.reset()
       this.samples.clearCookie()
+      this.settings.clearCookie()
     },
   },
 };

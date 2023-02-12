@@ -1,9 +1,7 @@
 import { defineStore } from 'pinia'
-
 import { settingsStore } from './settings'
 import { gameStateStore } from './gameState'
-
-import {useCookies} from "vue3-cookies";
+import { useCookies } from "vue3-cookies";
 
 function createPart(parts, parentId, uid) {
     return {"parts": parts, "parentId": parentId, "uid": uid, "lives": settingsStore().getMaxLives, "selected": false}

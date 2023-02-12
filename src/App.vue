@@ -15,7 +15,7 @@ import { gameStateStore } from "./stores/gameState"
 export default {
   setup() {
     const gameState = gameStateStore();
-    gameState.reset()
+    gameState.init()
     return {gameState };
   },
 }

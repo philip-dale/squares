@@ -11,7 +11,7 @@ function generatePart(parts) {
     let maxCount = 0
     const settings = settingsStore()
 
-    for(let i=0; i < settings.getMaxParts; i++){
+    for(let i=0; i < settings.getmaxContibuters; i++){
         let len = parts.filter(x => x === i).length
         if (len > maxCount) {
             maxCount = len
@@ -19,13 +19,13 @@ function generatePart(parts) {
     }
 
     let contributingParts = []
-    for(let i=0; i < settings.getMaxParts; i++){
+    for(let i=0; i < settings.getmaxContibuters; i++){
         if(parts.filter(x => x === i).length === maxCount) {
             contributingParts[contributingParts.length] = i
         }
     }
-
-    return contributingParts[Math.floor(Math.random() * contributingParts.length)]
+    let output = contributingParts[Math.floor(Math.random() * contributingParts.length)]
+    return output
 
 }
 
@@ -128,7 +128,9 @@ export const samplesStore = defineStore('samples', {
         init(containerId, capacity) {
             const {cookies} = useCookies();
             if(cookies.isKey("store_state") ){
-                this.count = cookies.get("store_state").count
+                if(cookies.get("store_state").count >= this.count) {
+                    this.count = cookies.get("store_state").count + 1
+                }
             }
 
             if(!(containerId in this.allSamples )) {
@@ -160,13 +162,38 @@ export const samplesStore = defineStore('samples', {
         spawn(containerId) {
             const settings = settingsStore()
             let size = settings.getSize
+            const levelDetails = settings.getGameLevelDetails
+
+            const baseSample = Math.floor(Math.random() * levelDetails.maxContibuters)
+
             var parts = new Array(size.x);
             for (let x = 0; x < size.x; x++) {
-                parts[x] = new Array(size.y);
+                parts[x] = new Array(size.y).fill(baseSample);
+            }
+
+            // Get parts to change
+            var locations = []
+            let locationsCount = 0
+            for (let x = 0; x < size.x; x++) {
                 for (let y = 0; y < size.y; y++) {
-                    parts[x][y] = Math.floor(Math.random() * settings.getMaxParts);
+                    locations[locationsCount] = {"x":x, "y":y}
+                    locationsCount++
                 }
             }
+
+            let differences = Math.floor(Math.random() * ((levelDetails.maxDifferences + 1) - levelDetails.minDifferences) + levelDetails.minDifferences)
+
+            for (let p = 0; p < differences; p++) {
+                let cPart = baseSample;
+                while (cPart == baseSample) {
+                    cPart = Math.floor(Math.random() * settings.getmaxContibuters)
+                } 
+                let locationIndex = Math.floor(Math.random() * locations.length)
+                parts[locations[locationIndex].x][locations[locationIndex].y] = cPart
+                locations.splice(locationIndex, 1)
+            }
+
+            
 
             this.allSamples[containerId][this.count.toString()] = createPart(parts, containerId, this.count.toString())
             this.count++

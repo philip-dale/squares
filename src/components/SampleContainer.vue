@@ -11,7 +11,7 @@
     >
       <div class="ifContainer" v-if="showGhosts" >
         <SampleDisplay
-          v-for="s in this.settings.getMaxParts"
+          v-for="s in this.settings.getmaxContibuters"
           v-bind:key="s"
           parent="" uid="" 
           :ghostId="s-1"
@@ -55,6 +55,12 @@ export default {
       type: String,
       default: ""
     },
+    data() {
+      console.log("DATA")
+      return {
+        timer : null
+      }
+    },
     containerType: {
       validator(value) {
         return ["spawn", "merge-in", "sink", "merge-out"].includes(value);
@@ -65,10 +71,14 @@ export default {
     const samples = samplesStore();
     const settings = settingsStore();
     const gameState = gameStateStore();
-    return { samples, settings, gameState };
+
+    return { samples, settings, gameState};
   },
   created() {
     this.samples.init(this.id, this.maxSamples);
+    if(this.settings.autoSpawn && this.canSpawn) {
+      this.gameState.setSpawnTimer(this.autoSpawn, this.settings.getGameLevelDetails.spawnTime)
+    }
   },
   computed: {
     canSpawn() {
@@ -119,6 +129,19 @@ export default {
     spawn() {
       if (this.canSpawn && this.samples.hasSpace(this.id)) {
         this.samples.spawn(this.id);
+      }
+    },
+    autoSpawn() {
+      if(this.canSpawn) {
+        if(this.samples.hasSpace(this.id)) {
+          this.samples.spawn(this.id);
+          if(this.settings.autoSpawn && this.containerType === "spawn") {
+            this.gameState.setSpawnTimer(this.autoSpawn, this.settings.getGameLevelDetails.spawnTime)
+          }
+        } else {
+          console.log("Game Over")
+          // TODO Game Over Message
+        }
       }
     },
     preventDrop(evt) {

@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { settingsStore } from './settings'
 import { gameStateStore } from './gameState'
-import { useCookies } from "vue3-cookies";
 
 function createPart(parts, parentId, uid) {
     return {"parts": parts, "parentId": parentId, "uid": uid, "lives": settingsStore().getMaxLives, "selected": false}
@@ -126,17 +125,18 @@ export const samplesStore = defineStore('samples', {
     },
     actions: {
         init(containerId, capacity) {
-            const {cookies} = useCookies();
-            if(cookies.isKey("store_state") ){
-                if(cookies.get("store_state").count >= this.count) {
-                    this.count = cookies.get("store_state").count + 1
+            let storeState = JSON.parse(localStorage.getItem("store_state"))
+
+            if(storeState != null){
+                if(storeState.count >= this.count) {
+                    this.count = storeState.count + 1
                 }
             }
 
             if(!(containerId in this.allSamples )) {
-                if(cookies.isKey("store_state") && Object.keys(cookies.get("store_state").allSamples).includes(containerId)){
-                    this.allSamples[containerId] = cookies.get("store_state").allSamples[containerId]
-                    this.storeCapacity[containerId] = cookies.get("store_state").storeCapacity[containerId]
+                if(storeState != null && Object.keys(storeState.allSamples).includes(containerId)){
+                    this.allSamples[containerId] = storeState.allSamples[containerId]
+                    this.storeCapacity[containerId] = storeState.storeCapacity[containerId]
                 } else {
                     this.allSamples[containerId] = {}
                     this.storeCapacity[containerId] = capacity
@@ -149,15 +149,13 @@ export const samplesStore = defineStore('samples', {
             }
             this.count = 0, 
             this.selected = {'parentId':-1, "uid":-1}
-            this.setCookie()
+            this.setLocalStorage()
         },
-        setCookie() {
-            const {cookies} = useCookies();
-            cookies.set("store_state", this, Infinity, null, null, true, 'Strict')
+        setLocalStorage() {
+            localStorage.setItem("store_state", JSON.stringify(this))
         },
-        clearCookie() {
-            const {cookies} = useCookies();
-            cookies.remove("store_state")
+        clearLocalStorage() {
+            localStorage.clear("store_state")
         },
         spawn(containerId) {
             const settings = settingsStore()
@@ -197,7 +195,7 @@ export const samplesStore = defineStore('samples', {
 
             this.allSamples[containerId][this.count.toString()] = createPart(parts, containerId, this.count.toString())
             this.count++
-            this.setCookie()
+            this.setLocalStorage()
         },
         move(containerId, uid, newContainerId) {
             if(containerId != newContainerId) {
@@ -209,7 +207,7 @@ export const samplesStore = defineStore('samples', {
                 this.allSamples[newContainerId][newId]["uid"] = newId
                 this.allSamples[newContainerId][newId]["selected"] = false
                 delete this.allSamples[containerId][uid]
-                this.setCookie()
+                this.setLocalStorage()
             }
         },
         moveSelected(newContainerId) {
@@ -217,7 +215,7 @@ export const samplesStore = defineStore('samples', {
                 this.move(this.selected.parentId, this.selected.uid, newContainerId)
                 this.selected.parentId = -1
                 this.selected.uid = -1
-                this.setCookie()
+                this.setLocalStorage()
             }
         },
         moveSelectedToContainer(newContainerType, newContainerId) {
@@ -231,18 +229,18 @@ export const samplesStore = defineStore('samples', {
             } else if(this.hasSpace(newContainerId)){
                 this.moveSelected(newContainerId)
             }
-            this.setCookie()
+            this.setLocalStorage()
         },
         remove(containerId, uid) {
             delete this.allSamples[containerId][uid]
-            this.setCookie()
+            this.setLocalStorage()
         },
         removeSelected() {
             if(this.selected.parentId != -1){
                 delete this.allSamples[this.selected.parentId][this.selected.uid]
                 this.selected.parentId = -1
                 this.selected.uid = -1
-                this.setCookie()
+                this.setLocalStorage()
             }
         },
         merge(containerId, destId) {
@@ -264,7 +262,7 @@ export const samplesStore = defineStore('samples', {
                 let newSample = mergeSample(samplesParts)
                 this.allSamples[destId][this.count.toString()] = createPart(newSample, destId, this.count.toString())
                 this.count++
-                this.setCookie()
+                this.setLocalStorage()
             }
         },
         toggleSelect(containerId, uid) {
@@ -279,7 +277,7 @@ export const samplesStore = defineStore('samples', {
                 this.selected.uid = uid
                 this.allSamples[containerId][uid].selected = true
             }
-            this.setCookie()
+            this.setLocalStorage()
         }
     },
 })

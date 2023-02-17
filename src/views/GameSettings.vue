@@ -56,10 +56,10 @@ export default {
   methods: {
     clearDataBtn() {
       this.gameState.reset();
-      this.gameState.clearCookie();
+      this.gameState.clearLocalStorage();
       this.samples.reset();
-      this.samples.clearCookie();
-      this.settings.clearCookie();
+      this.samples.clearLocalStorage();
+      this.settings.clearLocalStorage();
     },
   },
 };

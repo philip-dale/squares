@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { settingsStore } from './settings'
-import { useCookies } from "vue3-cookies";
 
 export const gameStateStore = defineStore('gameState', {
     state: () => ({ 
@@ -38,19 +37,21 @@ export const gameStateStore = defineStore('gameState', {
     },
     actions: {
         init() {
-            const {cookies} = useCookies();
-            if(cookies.isKey("game_state") ){
+
+            let gameState = JSON.parse(localStorage.getItem("game_state"))
+
+            if(gameState != null){
                 const settings = settingsStore()
                 for(let i=0; i<settings.getmaxContibuters; i++) {
                     let key = i.toString()
-                    if(Object.keys(cookies.get("game_state").samplesCompleted).includes(key)) {
-                        this.samplesCompleted[key] = cookies.get("game_state").samplesCompleted[key]
+                    if(Object.keys(gameState.samplesCompleted).includes(key)) {
+                        this.samplesCompleted[key] = gameState.samplesCompleted[key]
                     } else {
                         this.samplesCompleted[key] = 0
                     }
 
-                    if(Object.keys(cookies.get("game_state").samplesCompletedAtLevel).includes(key)) {
-                        this.samplesCompletedAtLevel[key] = cookies.get("game_state").samplesCompletedAtLevel[key]
+                    if(Object.keys(gameState.samplesCompletedAtLevel).includes(key)) {
+                        this.samplesCompletedAtLevel[key] = gameState.samplesCompletedAtLevel[key]
                     } else {
                         this.samplesCompletedAtLevel[key] = 0
                     }
@@ -66,35 +67,38 @@ export const gameStateStore = defineStore('gameState', {
                 this.samplesCompleted[i.toString()] = 0
                 this.samplesCompletedAtLevel[i.toString()] = 0
             }
-            this.setCookie()
+            this.setLocalStorage()
         },
-        setCookie() {
-            const {cookies} = useCookies();
-            cookies.set("game_state", this, Infinity, null, null, true, 'Strict')
+        setLocalStorage() {
+            localStorage.setItem("game_state", JSON.stringify(this))
         },
-        clearCookie() {
-            const {cookies} = useCookies();
-            cookies.remove("game_state")
+        clearLocalStorage() {
+            localStorage.clear("game_state")
         },
         addCompletedSample(sampleNumber) {
             const settings = settingsStore()
 
-            this.samplesCompleted[sampleNumber.toString()]++;
-            this.samplesCompletedAtLevel[sampleNumber.toString()]++;
-
+            if(sampleNumber.toString() in this.samplesCompleted) {
+                this.samplesCompleted[sampleNumber.toString()]++;
+                this.samplesCompletedAtLevel[sampleNumber.toString()]++;
+            } else {
+                this.samplesCompleted[sampleNumber.toString()] = 1
+                this.samplesCompletedAtLevel[sampleNumber.toString()] = 1
+            }
+            
             if(settings.autoIncreaseLevel && (this.getLevelTotalCompleted >= settings.getGameLevelDetails.targetScoreIncrease)) {
                 settings.nextLevel()
                 this.clearCompletedAtLevel()
             }
 
-            this.setCookie()
+            this.setLocalStorage()
         },
         clearCompletedAtLevel() {
             const settings = settingsStore()
             for(let i=0; i<settings.getmaxContibuters; i++) {
                 this.samplesCompletedAtLevel[i.toString()] = 0
             }
-            this.setCookie()
+            this.setLocalStorage()
         },
         setSpawnTimer(func, timeout) {
             clearTimeout(this.spawnTimer)

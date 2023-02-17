@@ -56,7 +56,6 @@ export default {
       default: ""
     },
     data() {
-      console.log("DATA")
       return {
         timer : null
       }

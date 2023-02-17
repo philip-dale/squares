@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { useCookies } from "vue3-cookies";
 
 
 const gameLevels = {
@@ -86,38 +85,36 @@ export const settingsStore = defineStore('settings', {
     },
     actions: {
         init() {
-            const {cookies} = useCookies();
-            if(cookies.isKey("settings_state") ){
-                this.gameLevel = parseInt(cookies.get("settings_state").gameLevel)
-                this.autoIncreaseLevel = cookies.get("settings_state").autoIncreaseLevel
-                this.autoSpawn = cookies.get("settings_state").autoSpawn
+            let settingsState = JSON.parse(localStorage.getItem("settings_state"))
+            if(settingsState != null){
+                this.gameLevel = parseInt(settingsState.gameLevel)
+                this.autoIncreaseLevel = settingsState.autoIncreaseLevel
+                this.autoSpawn = settingsState.autoSpawn
             }
         },
-        setCookie() {
-            const { cookies } = useCookies();
-            cookies.set("settings_state", this, Infinity, null, null, true, 'Strict')
+        setLocalStorage() {
+            localStorage.setItem("settings_state", JSON.stringify(this))
         },
-        clearCookie() {
-            const { cookies } = useCookies();
-            cookies.remove("settings_state")
+        clearLocalStorage() {
+            localStorage.clear("settings_state")
         },
         setLevel(level) {
             this.gameLevel = level
-            this.setCookie()
+            this.setLocalStorage()
         },
         nextLevel() {
             if(this.gameLevel < Object.keys(gameLevels).length) {
                 this.gameLevel++
             }
-            this.setCookie()
+            this.setLocalStorage()
         },
         setAutoIncreaseLevel(val) {
             this.autoIncreaseLevel = val
-            this.setCookie()
+            this.setLocalStorage()
         },
         setAutoSpawn(val) {
             this,this.autoSpawn = val
-            this.setCookie()
+            this.setLocalStorage()
         }
     }
 })

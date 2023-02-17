@@ -16,10 +16,10 @@ import { settingsStore } from "./stores/settings";
 
 export default {
   setup() {
-    const gameState = gameStateStore();
-    gameState.init()
     const settings = settingsStore()
     settings.init()
+    const gameState = gameStateStore();
+    gameState.init()
     return {settings, gameState};
   },
 }

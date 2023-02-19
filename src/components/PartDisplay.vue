@@ -1,6 +1,6 @@
 <template>
-    <div class="partDisplay" v-bind:style="{ background: this.settings.getColour(this.partId), opacity: this.opacity }"></div>
-  </template>
+  <div class="partDisplay" v-bind:style="{ background: this.settings.getColour(this.partId), opacity: this.opacity }"></div>
+</template>
     
   <script>
   import { settingsStore } from "../stores/settings";

@@ -4,7 +4,7 @@
     <router-link to="/about">About</router-link> |
     <router-link to="/settings">Settings</router-link>
   </nav>
-  <div>{{ "Score = " + this.gameState.getTotalCompleted.toString() +  ", Level = " + this.settings.getGameLevel.toString() }}</div>
+  <div>{{ "Mode = " +  this.gameState.getGameTypeName + ", Level = " + this.gameState.getGameLevel.toString() + ", Score = " + this.gameState.getTotalCompleted.toString() }}</div>
   <div class="mainview">
     <router-view/>
   </div>
@@ -12,15 +12,12 @@
 
 <script>
 import { gameStateStore } from "./stores/gameState"
-import { settingsStore } from "./stores/settings";
 
 export default {
   setup() {
-    const settings = settingsStore()
-    settings.init()
     const gameState = gameStateStore();
     gameState.init()
-    return {settings, gameState};
+    return {gameState};
   },
 }
 </script>

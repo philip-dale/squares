@@ -8,9 +8,9 @@ function createPart(parts, parentId, uid) {
 
 function generatePart(parts) {
     let maxCount = 0
-    const settings = settingsStore()
+    let gameState = gameStateStore()
 
-    for(let i=0; i < settings.getmaxContibuters; i++){
+    for(let i=0; i < gameState.getmaxContibuters; i++){
         let len = parts.filter(x => x === i).length
         if (len > maxCount) {
             maxCount = len
@@ -18,7 +18,7 @@ function generatePart(parts) {
     }
 
     let contributingParts = []
-    for(let i=0; i < settings.getmaxContibuters; i++){
+    for(let i=0; i < gameState.getmaxContibuters; i++){
         if(parts.filter(x => x === i).length === maxCount) {
             contributingParts[contributingParts.length] = i
         }
@@ -159,8 +159,10 @@ export const samplesStore = defineStore('samples', {
         },
         spawn(containerId) {
             const settings = settingsStore()
+            let gameState = gameStateStore()
+
             let size = settings.getSize
-            const levelDetails = settings.getGameLevelDetails
+            const levelDetails = gameState.getGameLevelDetails
 
             const baseSample = Math.floor(Math.random() * levelDetails.maxContibuters)
 
@@ -184,15 +186,12 @@ export const samplesStore = defineStore('samples', {
             for (let p = 0; p < differences; p++) {
                 let cPart = baseSample;
                 while (cPart == baseSample) {
-                    cPart = Math.floor(Math.random() * settings.getmaxContibuters)
+                    cPart = Math.floor(Math.random() * gameState.getmaxContibuters)
                 } 
                 let locationIndex = Math.floor(Math.random() * locations.length)
                 parts[locations[locationIndex].x][locations[locationIndex].y] = cPart
                 locations.splice(locationIndex, 1)
             }
-
-            
-
             this.allSamples[containerId][this.count.toString()] = createPart(parts, containerId, this.count.toString())
             this.count++
             this.setLocalStorage()

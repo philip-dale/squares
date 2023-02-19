@@ -11,7 +11,7 @@
     >
       <div class="ifContainer" v-if="showGhosts" >
         <SampleDisplay
-          v-for="s in this.settings.getmaxContibuters"
+          v-for="s in this.gameState.getmaxContibuters"
           v-bind:key="s"
           parent="" uid="" 
           :ghostId="s-1"
@@ -75,8 +75,8 @@ export default {
   },
   created() {
     this.samples.init(this.id, this.maxSamples);
-    if(this.settings.autoSpawn && this.canSpawn) {
-      this.gameState.setSpawnTimer(this.autoSpawn, this.settings.getGameLevelDetails.spawnTime)
+    if(this.canSpawn) {
+      this.gameState.setSpawnTimer(this.autoSpawn, this.gameState.getGameLevelDetails.spawnTime)
     }
   },
   computed: {
@@ -99,7 +99,7 @@ export default {
       return 'center'
     },
     showGhosts() {
-      return this.containerType === "sink" && this.settings.getGameType === "standard"
+      return this.containerType === "sink"
     },
     currentItems() {
       return Object.keys(this.samples.containerSamples(this.id)).length
@@ -126,20 +126,23 @@ export default {
       this.samples.moveSelectedToContainer(this.containerType, this.id)
     },
     spawn() {
-      if (this.canSpawn && this.samples.hasSpace(this.id)) {
-        this.samples.spawn(this.id);
-      }
+      if (this.canSpawn){
+        if(this.samples.hasSpace(this.id)) {
+          this.samples.spawn(this.id);
+        } else {
+          this.gameState.spawnFull()
+        }
+      } 
     },
     autoSpawn() {
       if(this.canSpawn) {
         if(this.samples.hasSpace(this.id)) {
           this.samples.spawn(this.id);
-          if(this.settings.autoSpawn && this.containerType === "spawn") {
-            this.gameState.setSpawnTimer(this.autoSpawn, this.settings.getGameLevelDetails.spawnTime)
+          if(this.canSpawn) {
+            this.gameState.setSpawnTimer(this.autoSpawn, this.gameState.getGameLevelDetails.spawnTime)
           }
         } else {
-          console.log("Game Over")
-          // TODO Game Over Message
+          this.gameState.spawnFull()
         }
       }
     },

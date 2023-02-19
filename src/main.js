@@ -3,6 +3,9 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import VueCookies from 'vue3-cookies'
+import 'gitart-vue-dialog/dist/style.css'
+import { GDialog } from 'gitart-vue-dialog'
+import { plugin as dialogPlugin } from 'gitart-vue-dialog'
 
 // Vuetify
 import 'vuetify/styles'
@@ -21,4 +24,6 @@ createApp(App).use(createPinia())
     .use(router)
     .use(VueCookies)
     .use(vuetify)
+    .use(dialogPlugin)
+    .component('GDialog', GDialog)
     .mount('#app')

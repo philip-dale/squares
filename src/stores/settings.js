@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 
-
 const gameLevels = {
     1:  { maxContibuters: 2, maxDifferences: 1, minDifferences: 1, targetScoreIncrease: 6,  spawnTime: 10000},
     2:  { maxContibuters: 3, maxDifferences: 1, minDifferences: 1, targetScoreIncrease: 10, spawnTime: 10000},
@@ -22,7 +21,6 @@ const gameLevels = {
 export const settingsStore = defineStore('settings', {
     state: () => ({
         size: { x: 2, y: 3 },
-        gameLevel: 1,
         colourList: ['#ff0000', '#40ff00', '#0040ff', '#ff00ff', '#ffbf00', '#449c90'],
         maxLives: 3,
         spawnMax: 49,
@@ -30,16 +28,10 @@ export const settingsStore = defineStore('settings', {
         mergeInMin: 3,
         mergeOutMax: 1,
         sinkMax: -1,
-        gameType: "standard",
-        autoIncreaseLevel: true,
-        autoSpawn: true,
     }),
     getters: {
         getSize: (state) => {
             return state.size
-        },
-        getmaxContibuters: (state) => {
-            return gameLevels[state.gameLevel].maxContibuters
         },
         getColour: (state) => {
             return (partId) => state.colourList[partId]
@@ -64,57 +56,9 @@ export const settingsStore = defineStore('settings', {
         getMergeInMin: (state) => {
             return state.mergeInMin
         },
-        getGameType: (state) => {
-            return state.gameType
-        },
-        getGameLevel: (state) => {
-            return state.gameLevel
-        },
-        getGameLevelDetails: (state) => {
-            return gameLevels[state.gameLevel]
-        },
         getGameLevels: () => {
             return gameLevels
         },
-        getAutoSpawn: (state) => {
-            return state.autoSpawn
-        },
-        getAutoIncreaseLevel: (state) => {
-            return state.autoIncreaseLevel
-        }
-    },
-    actions: {
-        init() {
-            let settingsState = JSON.parse(localStorage.getItem("settings_state"))
-            if(settingsState != null){
-                this.gameLevel = parseInt(settingsState.gameLevel)
-                this.autoIncreaseLevel = settingsState.autoIncreaseLevel
-                this.autoSpawn = settingsState.autoSpawn
-            }
-        },
-        setLocalStorage() {
-            localStorage.setItem("settings_state", JSON.stringify(this))
-        },
-        clearLocalStorage() {
-            localStorage.clear("settings_state")
-        },
-        setLevel(level) {
-            this.gameLevel = level
-            this.setLocalStorage()
-        },
-        nextLevel() {
-            if(this.gameLevel < Object.keys(gameLevels).length) {
-                this.gameLevel++
-            }
-            this.setLocalStorage()
-        },
-        setAutoIncreaseLevel(val) {
-            this.autoIncreaseLevel = val
-            this.setLocalStorage()
-        },
-        setAutoSpawn(val) {
-            this,this.autoSpawn = val
-            this.setLocalStorage()
-        }
+
     }
 })

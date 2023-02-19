@@ -10,17 +10,52 @@
         <SampleContainer class="sink" id="5" containerType="sink"/>
       </div>
   </div>
+
+  <GDialog v-model="gamePausedDialog">
+    <div class="dialogWrapper">
+      <div class="dialogContent">
+        <div class="dialogTitle">Game Paused</div>
+        Game Paused
+      </div>
+      <div class="actions">
+        <v-btn @click="this.gamePausedDialog = false">Play</v-btn>
+      </div>
+    </div>
+  </GDialog>
 </template>
 
 <script>
 import SampleContainer from "@/components/SampleContainer.vue";
 import SampleMerger from "@/components/SampleMerger.vue";
+import { gameStateStore } from "../stores/gameState"
+
 export default {
   name: "GameView",
   components: {
     SampleContainer,
     SampleMerger,
   },
+  setup() {
+    const gameState = gameStateStore();
+    window.addEventListener('blur', () => {gameState.setGamePaused(true)});
+    return {gameState};
+  },
+  created() {
+    this.gameState.setGamePaused(true)
+  },
+  beforeUnmount() {
+    this.gameState.setGamePaused(true)
+  },
+  computed: {
+    gamePausedDialog: {
+      get() {
+        return this.gameState.getGamePaused
+      },
+      set(val) {
+        this.gameState.setGamePaused(val)
+      }
+    }
+  }
 }
 </script>
 
@@ -43,7 +78,7 @@ export default {
   padding: 5px;
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   align-content: flex-start;
   height: 65vh;
   min-height: 65vh;

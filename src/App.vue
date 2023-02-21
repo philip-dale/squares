@@ -33,6 +33,9 @@
         <router-link to="/instructions">Instructions</router-link>
       </v-btn>
       <v-btn flat>
+        <router-link to="/scores">Scores</router-link>
+      </v-btn>
+      <v-btn flat>
         <router-link to="/settings">Settings</router-link>
       </v-btn>
   </v-navigation-drawer>

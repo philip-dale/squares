@@ -7,8 +7,9 @@
         <SampleMerger id="2"/>
         <SampleMerger id="3"/>
         <SampleMerger id="4"/>
-        <SampleContainer class="sink" id="5" containerType="sink"/>
+        
       </div>
+      <SampleContainer class="sink" id="5" containerType="sink"/>
   </div>
 
   <GDialog v-model="gamePausedDialog">
@@ -65,36 +66,34 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   margin-left: 0px;
 }
 .stores {
-  width: 50%;
+  width: 100%;
   padding: 5px;
+  height: 350px;
 }
-
+.spawn {
+  width: 100%;
+  height: 100%;
+}
 .mergers {
   padding: 5px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: flex-start;
-  height: 65vh;
-  min-height: 65vh;
+  height: 40vh;
+  min-height: 40vh;
+  width: 100%;
 }
 
 .sink {
-  height: 6em;
-  min-height: 6em;
-  width: 49vw;
-  min-width: 49vw;
-  height: 16vh;
-  min-height: 16vh;
+  height: 10vh;
+  min-height: 10vh;
 }
 
-.spawn {
-  width: 49vw;
-  min-width: 49vw;
-}
+
 </style>

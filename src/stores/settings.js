@@ -23,7 +23,7 @@ export const settingsStore = defineStore('settings', {
         size: { x: 2, y: 3 },
         colourList: ['#ff0000', '#40ff00', '#0040ff', '#ff00ff', '#ffbf00', '#449c90'],
         maxLives: 3,
-        spawnMax: 49,
+        spawnMax: 40,
         mergeInMax: 5,
         mergeInMin: 3,
         mergeOutMax: 1,

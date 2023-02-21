@@ -1,33 +1,66 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/settings">Settings</router-link>
-  </nav>
-  <div>{{ "Mode = " +  this.gameState.getGameTypeName + ", Level = " + this.gameState.getGameLevel.toString() + ", Score = " + this.gameState.getTotalCompleted.toString() }}</div>
-  <div class="mainview">
-    <router-view/>
+  <v-app style="max-width: 500px; min-width: 400px; align-self: center; align-items: start;">
+  <v-toolbar >
+    <v-app-bar-nav-icon
+      variant="text"
+      @click.stop="drawer = !drawer"
+    ></v-app-bar-nav-icon>
+    <v-toolbar-title>
+    Squares
+    </v-toolbar-title>
+  </v-toolbar>
+  <div>
+    {{
+      "Mode = " +
+      this.gameState.getGameTypeName +
+      ", Level = " +
+      this.gameState.getGameLevel.toString() +
+      ", Score = " +
+      this.gameState.getTotalCompleted.toString()
+    }}
   </div>
+  <div class="mainview">
+    <router-view />
+  </div>
+
+</v-app>
+<v-layout>
+  <v-navigation-drawer v-model="drawer" temporary>
+    <v-btn flat>
+        <router-link to="/">Play</router-link>
+      </v-btn>
+      <v-btn flat>
+        <router-link to="/instructions">Instructions</router-link>
+      </v-btn>
+      <v-btn flat>
+        <router-link to="/settings">Settings</router-link>
+      </v-btn>
+  </v-navigation-drawer>
+</v-layout>
 </template>
 
 <script>
-import { gameStateStore } from "./stores/gameState"
+import { gameStateStore } from "./stores/gameState";
 
 export default {
   setup() {
     const gameState = gameStateStore();
-    gameState.init()
-    return {gameState};
+    gameState.init();
+    return { gameState };
   },
-}
+  data: () => ({
+    drawer: false,
+  })
+};
 </script>
 
 <style>
-html, body {
-   height: 100%;
-   width : 100%;
-   margin: 0;
-   padding: 0;
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 #app {
@@ -38,11 +71,11 @@ html, body {
   color: #2c3e50;
   height: 100%;
   width: 100%;
-  display: flex; 
+  display: flex;
   flex-direction: column;
 }
 .mainview {
-  flex-grow: 1; 
+  flex-grow: 1;
 }
 
 nav {

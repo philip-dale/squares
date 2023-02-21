@@ -82,8 +82,8 @@ export default {
   border-width: 2px;
   padding: 1px;
   margin: 2px;
-  width: 4em;
-  height: 4em;
+  width: 3em;
+  height: 3em;
 }
 
 .displayRow {

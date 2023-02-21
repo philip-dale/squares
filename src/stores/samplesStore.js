@@ -127,20 +127,17 @@ export const samplesStore = defineStore('samples', {
         init(containerId, capacity) {
             let storeState = JSON.parse(localStorage.getItem("store_state"))
 
-            if(storeState != null){
-                if(storeState.count >= this.count) {
-                    this.count = storeState.count + 1
-                }
+            if(storeState != null && "count" in storeState && storeState.count >= this.count){
+                this.count = storeState.count + 1
             }
 
             if(!(containerId in this.allSamples )) {
-                if(storeState != null && Object.keys(storeState.allSamples).includes(containerId)){
+                if(storeState != null && "allSamples" in storeState && Object.keys(storeState.allSamples).includes(containerId)){
                     this.allSamples[containerId] = storeState.allSamples[containerId]
-                    this.storeCapacity[containerId] = storeState.storeCapacity[containerId]
                 } else {
                     this.allSamples[containerId] = {}
-                    this.storeCapacity[containerId] = capacity
                 }
+                this.storeCapacity[containerId] = capacity
             }
         },
         reset() {

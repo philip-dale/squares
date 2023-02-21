@@ -9,7 +9,7 @@
       @click="click()"
       :style="{'align-items':alignItems, 'align-content':alignItems, 'justify-content':alignItems}"
     >
-      <div class="ifContainer" v-if="showGhosts" >
+      <div class="ifContainer" v-if="showGhosts" :style="{'align-items':alignItems, 'align-content':alignItems, 'justify-content':alignItems}">
         <SampleDisplay
           v-for="s in this.gameState.getmaxContibuters"
           v-bind:key="s"
@@ -17,7 +17,7 @@
           :ghostId="s-1"
         />
       </div>
-      <div class="ifContainer" v-else>
+      <div class="ifContainer" v-else :style="{'align-items':alignItems, 'align-content':alignItems, 'justify-content':alignItems}">
         <SampleDisplay
           v-for="s in this.samples.containerSamples(this.id)"
           v-bind:key="s"
@@ -120,10 +120,14 @@ export default {
       this.samples.toggleSelect(sample.parentId, sample.uid)
     },
     onDrop() {
-      this.samples.moveSelectedToContainer(this.containerType, this.id)
+      if(this.canMoveTo) {
+        this.samples.moveSelectedToContainer(this.containerType, this.id)
+      }
     },
     click() {
-      this.samples.moveSelectedToContainer(this.containerType, this.id)
+      if(this.canMoveTo) {
+        this.samples.moveSelectedToContainer(this.containerType, this.id)
+      }
     },
     spawn() {
       if (this.canSpawn){
@@ -164,11 +168,12 @@ export default {
 
 .sampleContainer {
   width: 100%;
+  /* min-height: 100%; */
   height: 100%;
   box-sizing: border-box;
-  border-radius: 25px;
+  border-radius: 20px;
   border: 2px solid #5c8d17;
-  padding: 15px;
+  padding: 5px;
   display: flex;
   flex-wrap: wrap;
 }
@@ -176,11 +181,12 @@ export default {
 .ifContainer {
   display: flex;
   flex-wrap: wrap;
+  height: 100%;
 }
 
 .counter {
   top: -0.25em;
-  left: 2em;
+  left: 1.2em;
   position: absolute;
   display: flex;
   border: 2px solid #5c8d17;

@@ -2,12 +2,12 @@
   <v-app style="max-width: 500px; min-width: 400px; align-self: center; align-items: start;">
   <v-toolbar >
     <v-app-bar-nav-icon
-      variant="text"
       @click.stop="drawer = !drawer"
     ></v-app-bar-nav-icon>
-    <v-toolbar-title>
-    Squares
-    </v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-toolbar-title>Squares</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <img class="mr-3" :src="require('./assets/squares.png')" height="48"/>
   </v-toolbar>
   <div>
     {{

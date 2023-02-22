@@ -26,5 +26,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run deploy
+    - name: Install packages
+      run: npm i
+    - name: Set Creds
+      run: git config user.name "<username>" && git config user.email "<email>"
+    - name: Deploy
+      run: npm run deploy

@@ -231,7 +231,7 @@ export const scoreBoardStore = defineStore('scoreBoards', {
 
             if(scoresState != null){
                 if("scoreBoards" in scoresState) {
-                    this.scoreBoards = parseInt(scoresState.scoreBoards)
+                    this.scoreBoards = scoresState.scoreBoards
                 }
             }
 

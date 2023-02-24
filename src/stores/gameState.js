@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { settingsStore } from './settings'
+import { scoreBoardStore} from './gameScores'
 
 const gameTypes = {
     "standard":{"name": "Standard", "autoSpawn":false, "autoIncreaseLevel": true, "oneOfEach":false}, 
@@ -18,6 +19,7 @@ export const gameStateStore = defineStore('gameState', {
         gameLevel: 1,
         gamePaused: true,
         playTime: 0,
+        gameOver: false,
     }),
     getters: {
         getSamplesCompleted: (state) => {
@@ -72,6 +74,9 @@ export const gameStateStore = defineStore('gameState', {
         },
         getGamePaused: (state) => {
             return state.gamePaused
+        },
+        isGameOver: (state) => {
+            return state.gameOver
         }
 
     },
@@ -92,6 +97,11 @@ export const gameStateStore = defineStore('gameState', {
                 if("playTime" in gameState) {
                     this.playTime = parseInt(gameState.playTime)
                 }
+
+                if("gameOver" in gameState) {
+                    this.gameOver = gameState.gameOver
+                }
+                
                 setInterval(
                     () => {
                         if(!this.gamePaused) {
@@ -138,6 +148,7 @@ export const gameStateStore = defineStore('gameState', {
                 playtimeIncrement
             )
             this.gamePaused = true
+            this.gameOver = false
             this.setLocalStorage()
         },
         setLocalStorage() {
@@ -147,6 +158,7 @@ export const gameStateStore = defineStore('gameState', {
             obj.gameType = this.gameType
             obj.gameLevel = this.gameLevel
             obj.playTime = this.playTime
+            obj.gameOver = this.gameOver
             
             localStorage.setItem("game_state", JSON.stringify(obj))
         },
@@ -176,7 +188,10 @@ export const gameStateStore = defineStore('gameState', {
                     }
                 }
                 if(oneOfEach) {
-                    console.log("Level Won", this.playTime, this.getTotalCompleted)
+                    console.log("Level Won", this.getGameType, -1, this.playTime, this.gameLevel)
+                    const board = scoreBoardStore()
+                    board.addScore(this.getGameType, -1, this.playTime, this.gameLevel)
+                    this.gameOver = true
                 }
             }
             
@@ -215,7 +230,10 @@ export const gameStateStore = defineStore('gameState', {
             this.setLocalStorage()
         },
         spawnFull() {
-            console.log("Game Over", this.playTime, this.getTotalCompleted)
+            console.log("Game Over", this.getGameType, this.getTotalCompleted, this.playTime, this.gameLevel)
+            const board = scoreBoardStore()
+            board.addScore(this.getGameType, this.getTotalCompleted, this.playTime, this.gameLevel)
+            this.gameOver = true
         },
         setGamePaused(val) {
             this.gamePaused = val

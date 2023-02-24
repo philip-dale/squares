@@ -23,12 +23,25 @@
       </div>
     </div>
   </GDialog>
+
+  <GDialog v-model="gameOverDialog" persistent >
+    <div class="dialogWrapper">
+      <div class="dialogContent">
+        <div class="dialogTitle">Game Over</div>
+        Game Over, would you like to play again?
+      </div>
+      <div class="dialogActions">
+        <v-btn @click="this.gameState.reset(); this.samples.reset();">Play Again</v-btn>
+      </div>
+    </div>
+  </GDialog>
 </template>
 
 <script>
 import SampleContainer from "@/components/SampleContainer.vue";
 import SampleMerger from "@/components/SampleMerger.vue";
 import { gameStateStore } from "../stores/gameState"
+import { samplesStore } from "../stores/samplesStore";
 
 export default {
   name: "GameView",
@@ -38,8 +51,9 @@ export default {
   },
   setup() {
     const gameState = gameStateStore();
+    const samples = samplesStore();
     window.addEventListener('blur', () => {gameState.setGamePaused(true)});
-    return {gameState};
+    return {gameState, samples};
   },
   created() {
     this.gameState.setGamePaused(true)
@@ -54,6 +68,11 @@ export default {
       },
       set(val) {
         this.gameState.setGamePaused(val)
+      }
+    },
+    gameOverDialog: {
+      get() {
+        return this.gameState.isGameOver
       }
     }
   }
@@ -95,5 +114,25 @@ export default {
   min-height: 10vh;
 }
 
+.dialogWrapper {
+  color: #000;
+}
+
+.dialogContent {
+  padding: 20px;
+}
+
+.dialogTitle {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
 
 </style>

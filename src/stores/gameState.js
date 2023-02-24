@@ -142,7 +142,14 @@ export const gameStateStore = defineStore('gameState', {
             this.setLocalStorage()
         },
         setLocalStorage() {
-            localStorage.setItem("game_state", JSON.stringify(this))
+            var obj = new Object();
+            obj.samplesCompleted = this.samplesCompleted
+            obj.samplesCompletedAtLevel = this.samplesCompletedAtLevel
+            obj.gameType = this.gameType
+            obj.gameLevel = this.gameLevel
+            obj.playTime = this.playTime
+            
+            localStorage.setItem("game_state", JSON.stringify(obj))
         },
         clearLocalStorage() {
             localStorage.clear("game_state")
@@ -208,6 +215,7 @@ export const gameStateStore = defineStore('gameState', {
         },
         setGameType(val) {
             this.gameType = val
+            this.setLocalStorage()
         },
         spawnFull() {
             console.log("Game Over", this.getGameType, this.getSamplesCompleted, this.playTime, this.gameLevel)

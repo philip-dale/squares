@@ -149,7 +149,14 @@ export const samplesStore = defineStore('samples', {
             this.setLocalStorage()
         },
         setLocalStorage() {
-            localStorage.setItem("store_state", JSON.stringify(this))
+            var obj = new Object();
+            obj.allSamples = this.allSamples
+            obj.count = this.count
+            obj.storeCapacity = this.storeCapacity
+            obj.selected = this.selected
+            obj.playTime = this.playTime
+
+            localStorage.setItem("store_state", JSON.stringify(obj))
         },
         clearLocalStorage() {
             localStorage.clear("store_state")

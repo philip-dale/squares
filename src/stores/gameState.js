@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { settingsStore } from './settings'
+import { scoreBoardStore} from './gameScores'
 
 const gameTypes = {
     "standard":{"name": "Standard", "autoSpawn":false, "autoIncreaseLevel": true, "oneOfEach":false}, 
@@ -169,7 +170,9 @@ export const gameStateStore = defineStore('gameState', {
                     }
                 }
                 if(oneOfEach) {
-                    console.log("Level Won", this.playTime, this.getTotalCompleted)
+                    console.log("Level Won", this.getGameType, -1, this.playTime, this.gameLevel)
+                    const board = scoreBoardStore()
+                    board.addScore(this.getGameType, -1, this.playTime, this.gameLevel)
                 }
             }
             
@@ -207,7 +210,9 @@ export const gameStateStore = defineStore('gameState', {
             this.gameType = val
         },
         spawnFull() {
-            console.log("Game Over", this.playTime, this.getTotalCompleted)
+            console.log("Game Over", this.getGameType, this.getSamplesCompleted, this.playTime, this.gameLevel)
+            const board = scoreBoardStore()
+            board.addScore(this.getGameType, this.getSamplesCompleted, this.playTime, this.gameLevel)
         },
         setGamePaused(val) {
             this.gamePaused = val

@@ -1,5 +1,5 @@
 <template>
-  <v-app style="max-width: 500px; min-width: 400px; align-self: center; align-items: start;">
+  <v-app style="max-width: 500px; min-width: 400px; align-self: center; align-items: start; flex-grow: 1; display: flex;">
   <v-toolbar >
     <v-app-bar-nav-icon
       @click.stop="drawer = !drawer"
@@ -22,9 +22,9 @@
   <div class="mainview">
     <router-view />
   </div>
-
+  
 </v-app>
-<v-layout>
+<v-layout style="display: flex; max-width: 1px;">
   <v-navigation-drawer v-model="drawer" temporary>
     <v-btn flat>
         <router-link to="/">Play</router-link>
@@ -38,8 +38,8 @@
       <v-btn flat>
         <router-link to="/settings">Settings</router-link>
       </v-btn>
-  </v-navigation-drawer>
-</v-layout>
+    </v-navigation-drawer>
+  </v-layout>
 </template>
 
 <script>
@@ -62,8 +62,11 @@ html,
 body {
   height: 100%;
   width: 100%;
+  /* width: 500px; */
   margin: 0;
   padding: 0;
+  display: flex;
+  align-self: center;
 }
 
 #app {
@@ -75,7 +78,9 @@ body {
   height: 100%;
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 .mainview {
   flex-grow: 1;

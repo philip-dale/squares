@@ -44,11 +44,14 @@
 
 <script>
 import { gameStateStore } from "./stores/gameState";
+import { scoreBoardStore } from "./stores/gameScores";
 
 export default {
   setup() {
     const gameState = gameStateStore();
+    const gameScores = scoreBoardStore();
     gameState.init();
+    gameScores.init();
     return { gameState };
   },
   data: () => ({

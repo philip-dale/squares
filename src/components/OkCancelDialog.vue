@@ -5,7 +5,7 @@
         <div class="dialogTitle">{{ this.title }}</div>
         {{ this.message }}
       </div>
-      <div class="actions">
+      <div class="dialogActions">
         <v-btn @click="$emit('okBtn')">{{ this.okText }}</v-btn>
         <v-btn @click="$emit('cancelBtn')">Cancel</v-btn>
       </div>

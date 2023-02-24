@@ -227,7 +227,42 @@ export const scoreBoardStore = defineStore('scoreBoards', {
     },
     actions: {
         init() {
+            let scoresState = JSON.parse(localStorage.getItem("scores_state"))
 
+            if(scoresState != null){
+                if("scoreBoards" in scoresState) {
+                    this.scoreBoards = parseInt(scoresState.scoreBoards)
+                }
+            }
+
+            defaultScoreBoards["standard"].sort(function (a, b) {
+                if (a.score === b.score) {
+                    return a.time - b.time
+                } else {
+                    return b.score - a.score
+                }
+            })
+
+            defaultScoreBoards["continuous"].sort(function (a, b) {
+                if (a.score === b.score) {
+                    return a.time - b.time
+                } else {
+                    return b.score - a.score
+                }
+            })
+
+            for(let i=0; i<defaultScoreBoards["oneOfEach"].length; i++) {
+                defaultScoreBoards["oneOfEach"][i].scores.sort(function (a, b) { return a.time - b.time })
+            }
+        },
+        setLocalStorage() {
+            var obj = new Object();
+            obj.scoreBoards = this.scoreBoards
+
+            localStorage.setItem("scores_state", JSON.stringify(obj))
+        },
+        clearLocalStorage() {
+            localStorage.clear("scores_state")
         },
         addScore(gameType, score, time, level) {
             if (gameType === "oneOfEach") {
@@ -249,6 +284,7 @@ export const scoreBoardStore = defineStore('scoreBoards', {
                     defaultScoreBoards[gameType].pop()
                 }
             }
-        }
+            this.setLocalStorage() 
+        },
     }
 })

@@ -1,5 +1,5 @@
 <template>
-  <GDialog v-model="showDialogState">
+  <GDialog v-model="showDialogState" width="350px">
     <div class="dialogWrapper">
       <div class="dialogContent">
         <div class="dialogTitle">{{ this.title }}</div>

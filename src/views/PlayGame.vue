@@ -12,7 +12,7 @@
       <SampleContainer class="sink" id="5" containerType="sink"/>
   </div>
 
-  <GDialog v-model="gamePausedDialog" width="350px">
+  <GDialog v-model="gamePausedDialog" width="350px" local>
     <div class="dialogWrapper">
       <div class="dialogContent">
         <div class="dialogTitle">Game Paused</div>
@@ -24,7 +24,7 @@
     </div>
   </GDialog>
 
-  <GDialog v-model="gameOverDialog" persistent width="350px">
+  <GDialog v-model="gameOverDialog" persistent width="350px" local>
     <div class="dialogWrapper">
       <div class="dialogContent">
         <div class="dialogTitle">Game Over</div>

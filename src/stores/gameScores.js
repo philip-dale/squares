@@ -235,7 +235,7 @@ export const scoreBoardStore = defineStore('scoreBoards', {
                 }
             }
 
-            defaultScoreBoards["standard"].sort(function (a, b) {
+            this.scoreBoards["standard"].sort(function (a, b) {
                 if (a.score === b.score) {
                     return a.time - b.time
                 } else {
@@ -243,7 +243,7 @@ export const scoreBoardStore = defineStore('scoreBoards', {
                 }
             })
 
-            defaultScoreBoards["continuous"].sort(function (a, b) {
+            this.scoreBoards["continuous"].sort(function (a, b) {
                 if (a.score === b.score) {
                     return a.time - b.time
                 } else {
@@ -251,8 +251,8 @@ export const scoreBoardStore = defineStore('scoreBoards', {
                 }
             })
 
-            for(let i=0; i<defaultScoreBoards["oneOfEach"].length; i++) {
-                defaultScoreBoards["oneOfEach"][i].scores.sort(function (a, b) { return a.time - b.time })
+            for(let i=0; i<this.scoreBoards["oneOfEach"].length; i++) {
+                this.scoreBoards["oneOfEach"][i].scores.sort(function (a, b) { return a.time - b.time })
             }
         },
         setLocalStorage() {
@@ -266,22 +266,22 @@ export const scoreBoardStore = defineStore('scoreBoards', {
         },
         addScore(gameType, score, time, level) {
             if (gameType === "oneOfEach") {
-                defaultScoreBoards[gameType][level - 1].scores.push({ "name": "", "time": time })
-                defaultScoreBoards[gameType][level - 1].scores.sort(function (a, b) { return a.time - b.time })
-                if (defaultScoreBoards[gameType][level - 1].scores.length > 10) {
-                    defaultScoreBoards[gameType][level - 1].scores.pop()
+                this.scoreBoards[gameType][level - 1].scores.push({ "name": "", "time": time })
+                this.scoreBoards[gameType][level - 1].scores.sort(function (a, b) { return a.time - b.time })
+                if (this.scoreBoards[gameType][level - 1].scores.length > 10) {
+                    this.scoreBoards[gameType][level - 1].scores.pop()
                 }
             } else {
-                defaultScoreBoards[gameType].push({ "name": "", "score": score, "time": time })
-                defaultScoreBoards[gameType].sort(function (a, b) {
+                this.scoreBoards[gameType].push({ "name": "", "score": score, "time": time })
+                this.scoreBoards[gameType].sort(function (a, b) {
                     if (a.score === b.score) {
                         return a.time - b.time
                     } else {
                         return b.score - a.score
                     }
                 })
-                if (defaultScoreBoards[gameType].length > 10) {
-                    defaultScoreBoards[gameType].pop()
+                if (this.scoreBoards[gameType].length > 10) {
+                    this.scoreBoards[gameType].pop()
                 }
             }
             this.setLocalStorage() 

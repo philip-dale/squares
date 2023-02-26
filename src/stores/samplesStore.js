@@ -228,9 +228,13 @@ export const samplesStore = defineStore('samples', {
                 if(pureVal != -1) {
                     gameState.addCompletedSample(pureVal)
                     this.removeSelected();
+                } else {
+                    return "Not Single Colour"
                 }
             } else if(this.hasSpace(newContainerId)){
                 this.moveSelected(newContainerId)
+            } else {
+                return "No Space"
             }
             this.setLocalStorage()
         },
@@ -248,24 +252,30 @@ export const samplesStore = defineStore('samples', {
         },
         merge(containerId, destId) {
             const settings = settingsStore()
-            if (Object.keys(this.allSamples[destId]).length < this.storeCapacity[destId] && Object.keys(this.allSamples[containerId]).length >= settings.getMergeInMin) {
+            if (Object.keys(this.allSamples[destId]).length < this.storeCapacity[destId]) {
+                if(Object.keys(this.allSamples[containerId]).length >= settings.getMergeInMin) {
                 
-                let samplesParts = new Array(Object.keys(this.allSamples[containerId]).length);
+                    let samplesParts = new Array(Object.keys(this.allSamples[containerId]).length);
 
-                let i = 0
-                for (const [key, value] of Object.entries(this.allSamples[containerId])) {
-                    samplesParts[i] = value.parts
-                    this.allSamples[containerId][key].lives--
-                    if(this.allSamples[containerId][key].lives < 1) {
-                        delete this.allSamples[containerId][key]
+                    let i = 0
+                    for (const [key, value] of Object.entries(this.allSamples[containerId])) {
+                        samplesParts[i] = value.parts
+                        this.allSamples[containerId][key].lives--
+                        if(this.allSamples[containerId][key].lives < 1) {
+                            delete this.allSamples[containerId][key]
+                        }
+
+                        i++
                     }
-
-                    i++
+                    let newSample = mergeSample(samplesParts)
+                    this.allSamples[destId][this.count.toString()] = createPart(newSample, destId, this.count.toString())
+                    this.count++
+                    this.setLocalStorage()
+                } else {
+                    return "Not Enough Inputs"
                 }
-                let newSample = mergeSample(samplesParts)
-                this.allSamples[destId][this.count.toString()] = createPart(newSample, destId, this.count.toString())
-                this.count++
-                this.setLocalStorage()
+            } else {
+                return "Output Full"
             }
         },
         toggleSelect(containerId, uid) {

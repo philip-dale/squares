@@ -2,47 +2,70 @@
   <div class="outerContainer">
     <div
       class="sampleContainer"
-      @drop="onDrop()"
-      @dragover="preventDrop($event)"
-      @dragenter="preventDrop($event)"
-      @dblclick="dbclick()"
-      @click="click()"
-      :style="{'align-items':alignItems, 'align-content':alignItems, 'justify-content':alignItems}"
+      @drop.stop="onDrop()"
+      @dragover.stop="preventDrop($event)"
+      @dragenter.stop="preventDrop($event)"
+      @dblclick.stop="dbclick()"
+      @click.stop="click()"
+      :style="{
+        'align-items': alignItems,
+        'align-content': alignItems,
+        'justify-content': alignItems,
+      }"
     >
-      <div class="ifContainer" v-if="showGhosts" :style="{'align-items':alignItems, 'align-content':alignItems, 'justify-content':alignItems}">
+      <div
+        class="ifContainer"
+        v-if="showGhosts"
+        :style="{
+          'align-items': alignItems,
+          'align-content': alignItems,
+          'justify-content': alignItems,
+        }"
+      >
         <SampleDisplay
           v-for="s in this.gameState.getmaxContibuters"
           v-bind:key="s"
-          parent="" uid="" 
-          :ghostId="s-1"
+          parent=""
+          uid=""
+          :ghostId="s - 1"
         />
       </div>
-      <div class="ifContainer" v-else :style="{'align-items':alignItems, 'align-content':alignItems, 'justify-content':alignItems}">
+      <div
+        class="ifContainer"
+        v-else
+        :style="{
+          'align-items': alignItems,
+          'align-content': alignItems,
+          'justify-content': alignItems,
+        }"
+      >
         <SampleDisplay
           v-for="s in this.samples.containerSamples(this.id)"
           v-bind:key="s"
           draggable="true"
           @dragstart="startDrag(s)"
           :parent="s.parentId"
-          :uid="s.uid" 
+          :uid="s.uid"
         />
       </div>
     </div>
     <div class="counter" v-if="destroy">
-      {{ this.gameState.getTotalCompleted  }}
+      {{ this.gameState.getTotalCompleted }}
     </div>
     <div class="counter" v-else>
-      {{ currentItems + " / " + this.maxSamples  }}
+      {{ currentItems + " / " + this.maxSamples }}
     </div>
+    <v-snackbar v-model="this.snackbar" timeout="2000">
+      {{ snackMessage }}
+    </v-snackbar>
   </div>
 </template>
 
 <script>
 import { samplesStore } from "../stores/samplesStore";
 import { settingsStore } from "../stores/settings";
-import { gameStateStore } from "../stores/gameState"
+import { gameStateStore } from "../stores/gameState";
 import SampleDisplay from "@/components/SampleDisplay.vue";
-
 
 export default {
   name: "SampleContainer",
@@ -53,12 +76,7 @@ export default {
     id: String,
     pairId: {
       type: String,
-      default: ""
-    },
-    data() {
-      return {
-        timer : null
-      }
+      default: "",
     },
     containerType: {
       validator(value) {
@@ -66,87 +84,124 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      snackMessage: "",
+      snackbar: false
+    }
+  },
   setup() {
     const samples = samplesStore();
     const settings = settingsStore();
     const gameState = gameStateStore();
 
-    return { samples, settings, gameState};
+    return { samples, settings, gameState };
   },
   created() {
     this.samples.init(this.id, this.maxSamples);
-    if(this.canSpawn) {
-      this.gameState.setSpawnTimer(this.autoSpawn, this.gameState.getGameLevelDetails.spawnTime)
+    if (this.canSpawn) {
+      this.gameState.setSpawnTimer(
+        this.autoSpawn,
+        this.gameState.getGameLevelDetails.spawnTime
+      );
     }
   },
   computed: {
     canSpawn() {
-      return this.samples.canSpawn(this.containerType)
+      return this.samples.canSpawn(this.containerType);
     },
     canMoveTo() {
-      return this.samples.canMoveTo(this.containerType)
+      return this.samples.canMoveTo(this.containerType);
     },
-    destroy(){
-      return this.samples.canDestroy(this.containerType)
+    destroy() {
+      return this.samples.canDestroy(this.containerType);
     },
     maxSamples() {
-      return this.settings.getContainerMax(this.containerType)
+      return this.settings.getContainerMax(this.containerType);
     },
     alignItems() {
-      if(this.containerType === "spawn") {
-        return 'flex-start'
+      if (this.containerType === "spawn") {
+        return "flex-start";
       }
-      return 'center'
+      return "center";
     },
     showGhosts() {
-      return this.containerType === "sink"
+      return this.containerType === "sink";
     },
     currentItems() {
-      return Object.keys(this.samples.containerSamples(this.id)).length
-    }
+      return Object.keys(this.samples.containerSamples(this.id)).length;
+    },
   },
   methods: {
     dbclick() {
-      switch(this.containerType) {
+      let ret = null;
+      switch (this.containerType) {
         case "spawn":
-          this.spawn()
-          return
+          this.spawn();
+          return;
         case "merge-in":
-        this.samples.merge(this.id, this.pairId);
-          return
+          ret = this.samples.merge(this.id, this.pairId);
+          if (ret != null) {
+            this.snackMessage = ret;
+            this.snackbar = true;
+          }
+          return;
       }
     },
     startDrag(sample) {
-      this.samples.toggleSelect(sample.parentId, sample.uid)
+      this.samples.toggleSelect(sample.parentId, sample.uid);
     },
     onDrop() {
-      if(this.canMoveTo) {
-        this.samples.moveSelectedToContainer(this.containerType, this.id)
+      if (this.canMoveTo) {
+        const ret = this.samples.moveSelectedToContainer(
+          this.containerType,
+          this.id
+        );
+        if (ret != null) {
+          this.snackMessage = ret;
+          this.snackbar = true;
+        }
       }
     },
     click() {
-      if(this.canMoveTo) {
-        this.samples.moveSelectedToContainer(this.containerType, this.id)
+      if (this.canMoveTo) {
+        const ret = this.samples.moveSelectedToContainer(
+          this.containerType,
+          this.id
+        );
+        console.log(ret);
+        if (ret != null) {
+          this.snackMessage = ret;
+          this.snackbar = true;
+        }
+      } else {
+        this.snackMessage = "Cannot Move here";
+          this.snackbar = true;
       }
     },
     spawn() {
-      if (this.canSpawn){
-        if(this.samples.hasSpace(this.id)) {
+      if (this.canSpawn) {
+        if (this.samples.hasSpace(this.id)) {
           this.samples.spawn(this.id);
         } else {
-          this.gameState.spawnFull()
+          this.gameState.spawnFull();
         }
-      } 
+      }
     },
     autoSpawn() {
-      if(this.canSpawn) {
-        if(this.samples.hasSpace(this.id)) {
+      if (this.canSpawn) {
+        if (this.samples.hasSpace(this.id)) {
           this.samples.spawn(this.id);
-          if(this.canSpawn) {
-            this.gameState.setSpawnTimer(this.autoSpawn, this.gameState.getGameLevelDetails.spawnTime)
+          if (this.canSpawn) {
+            this.gameState.setSpawnTimer(
+              this.autoSpawn,
+              this.gameState.getGameLevelDetails.spawnTime
+            );
           }
+          this.snackMessage = "Auto Spawn";
+          this.snackbar = true;
         } else {
-          this.gameState.spawnFull()
+          this.gameState.spawnFull();
         }
       }
     },
@@ -202,4 +257,5 @@ export default {
   -o-user-select: none;
   user-select: none;
 }
+
 </style>

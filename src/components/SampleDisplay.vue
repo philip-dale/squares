@@ -1,5 +1,5 @@
 <template>
-  <div class="sampleDisplay" :style="{'border-color': boarderColor}" @click='click()'>
+  <div class="sampleDisplay" :style="{'border-color': boarderColor}" @click.stop='click()'>
     <div v-for="y in this.settings.getSize.y" v-bind:key="y" class="displayRow">
       <div
         v-for="x in this.settings.getSize.x"

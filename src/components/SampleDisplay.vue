@@ -1,5 +1,5 @@
 <template>
-  <div class="sampleDisplay" :style="{'border-color': boarderColor}" @click='click()'>
+  <div class="sampleDisplay" :style="{'border-color': boarderColor}" @click.stop='click()'>
     <div v-for="y in this.settings.getSize.y" v-bind:key="y" class="displayRow">
       <div
         v-for="x in this.settings.getSize.x"
@@ -66,10 +66,7 @@ export default {
       if(this.ghostId === -1) {
         this.samples.toggleSelect(this.parent, this.uid)
       }
-    },
-    startDrag(evt) {
-      console.log("startDrag", evt)
-    },
+    }
   }
 };
 </script>
@@ -85,8 +82,8 @@ export default {
   border-width: 2px;
   padding: 1px;
   margin: 2px;
-  width: 4em;
-  height: 4em;
+  width: 3em;
+  height: 3em;
 }
 
 .displayRow {

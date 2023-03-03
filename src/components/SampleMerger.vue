@@ -40,18 +40,14 @@ export default {
 
 .merger-input {
     display: flex;
-    /* width: 75%; */
     padding-right: 5px;
-    min-height: 6em;
-    width: 34vw;
-    min-width: 34vw;
+    min-height: 5em;
+    width: 75%;
 }
 
 .merger-output {
     display: flex;
-    /* width: 25%; */
-    min-height: 6em;
-    width: 14vw;
-    min-width: 7em;
+    min-height: 5em;
+    width: 25%;
 }
 </style>

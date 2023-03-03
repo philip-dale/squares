@@ -7,20 +7,75 @@
         <SampleMerger id="2"/>
         <SampleMerger id="3"/>
         <SampleMerger id="4"/>
-        <SampleContainer class="sink" id="5" containerType="sink"/>
+        
       </div>
+      <SampleContainer class="sink" id="5" containerType="sink"/>
   </div>
+
+  <GDialog v-model="gamePausedDialog" width="350px" local>
+    <div class="dialogWrapper">
+      <div class="dialogContent">
+        <div class="dialogTitle">Game Paused</div>
+        Game Paused
+      </div>
+      <div class="actions">
+        <v-btn @click="this.gamePausedDialog = false">Play</v-btn>
+      </div>
+    </div>
+  </GDialog>
+
+  <GDialog v-model="gameOverDialog" persistent width="350px" local>
+    <div class="dialogWrapper">
+      <div class="dialogContent">
+        <div class="dialogTitle">Game Over</div>
+        Game Over, would you like to play again?
+      </div>
+      <div class="dialogActions">
+        <v-btn @click="this.gameState.reset(); this.samples.reset();">Play Again</v-btn>
+      </div>
+    </div>
+  </GDialog>
 </template>
 
 <script>
 import SampleContainer from "@/components/SampleContainer.vue";
 import SampleMerger from "@/components/SampleMerger.vue";
+import { gameStateStore } from "../stores/gameState"
+import { samplesStore } from "../stores/samplesStore";
+
 export default {
   name: "GameView",
   components: {
     SampleContainer,
     SampleMerger,
   },
+  setup() {
+    const gameState = gameStateStore();
+    const samples = samplesStore();
+    window.addEventListener('blur', () => {gameState.setGamePaused(true)});
+    return {gameState, samples};
+  },
+  created() {
+    this.gameState.setGamePaused(true)
+  },
+  beforeUnmount() {
+    this.gameState.setGamePaused(true)
+  },
+  computed: {
+    gamePausedDialog: {
+      get() {
+        return this.gameState.getGamePaused
+      },
+      set(val) {
+        this.gameState.setGamePaused(val)
+      }
+    },
+    gameOverDialog: {
+      get() {
+        return this.gameState.isGameOver
+      }
+    }
+  }
 }
 </script>
 
@@ -30,39 +85,54 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   margin-left: 0px;
 }
 .stores {
-  /* width: 50%; */
+  width: 100%;
   padding: 5px;
+  height: 350px;
 }
-
+.spawn {
+  width: 100%;
+  height: 100%;
+}
 .mergers {
-  /* width: 50%; */
   padding: 5px;
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   align-content: flex-start;
-  height: 65vh;
-  min-height: 65vh;
+  height: 40vh;
+  min-height: 40vh;
+  width: 100%;
 }
 
 .sink {
-  height: 6em;
-  min-height: 6em;
-  width: 49vw;
-  min-width: 49vw;
-  height: 16vh;
-  min-height: 16vh;
+  height: 10vh;
+  min-height: 10vh;
 }
 
-.spawn {
-  /* height: 32.6em; */
-  /* min-height: 32.6em; */
-  width: 49vw;
-  min-width: 49vw;
+.dialogWrapper {
+  color: #000;
 }
+
+.dialogContent {
+  padding: 20px;
+}
+
+.dialogTitle {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
 </style>

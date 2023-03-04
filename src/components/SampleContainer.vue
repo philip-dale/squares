@@ -2,9 +2,6 @@
   <div class="outerContainer">
     <div
       class="sampleContainer"
-      @drop.stop="onDrop()"
-      @dragover.stop="preventDrop($event)"
-      @dragenter.stop="preventDrop($event)"
       @dblclick.stop="dbclick()"
       @click.stop="click()"
       :style="{
@@ -13,7 +10,7 @@
         'justify-content': alignItems,
       }"
     >
-      <div
+      <draggable
         class="ifContainer"
         v-if="showGhosts"
         :style="{
@@ -21,16 +18,19 @@
           'align-content': alignItems,
           'justify-content': alignItems,
         }"
-      >
-        <SampleDisplay
-          v-for="s in this.gameState.getmaxContibuters"
-          v-bind:key="s"
-          parent=""
-          uid=""
-          :ghostId="s - 1"
-        />
-      </div>
-      <div
+        v-model="ghostSamples" 
+        group="samples"
+        item-key="id">
+        <template #item="{element}">
+          <SampleDisplay
+            parent=""
+            uid=""
+            :ghostId="element.id"
+          />
+        </template>
+      </draggable>
+
+      <draggable
         class="ifContainer"
         v-else
         :style="{
@@ -38,16 +38,17 @@
           'align-content': alignItems,
           'justify-content': alignItems,
         }"
-      >
-        <SampleDisplay
-          v-for="s in this.samples.containerSamples(this.id)"
-          v-bind:key="s"
-          draggable="true"
-          @dragstart="startDrag(s)"
-          :parent="s.parentId"
-          :uid="s.uid"
-        />
-      </div>
+        v-model="containerSamples" 
+        @start="startDrag($event)" 
+        group="samples"
+        item-key="id">
+        <template #item="{element}">
+          <SampleDisplay
+            :parent="element.parentId"
+            :uid="element.uid"
+          />
+        </template>
+      </draggable>
     </div>
     <div class="counter" v-if="destroy">
       {{ this.gameState.getTotalCompleted }}
@@ -67,10 +68,13 @@ import { settingsStore } from "../stores/settings";
 import { gameStateStore } from "../stores/gameState";
 import SampleDisplay from "@/components/SampleDisplay.vue";
 
+import draggable from 'vuedraggable'
+
 export default {
   name: "SampleContainer",
   components: {
     SampleDisplay,
+    draggable,
   },
   props: {
     id: String,
@@ -131,6 +135,32 @@ export default {
     currentItems() {
       return Object.keys(this.samples.containerSamples(this.id)).length;
     },
+    containerSamples: {
+      get() {
+        let ret = Object.keys(this.samples.containerSamples(this.id)).map((key) => ({uid: key, parentId:this.samples.containerSamples(this.id)[key].parentId, sortId:this.samples.containerSamples(this.id)[key].containerIndex }))
+        ret.sort(function(a, b){return a.sortId - b.sortId});
+        return ret
+      },
+      set(val) {
+        this.onDrop()
+        if (val.length > 1) {
+          this.samples.organiseContainer(this.id, val)
+        }
+        
+      }
+    },
+    ghostSamples: {
+      get() {
+        let ret = []
+        for(let s = 0; s < this.gameState.getmaxContibuters; s++) {
+          ret.push({id: s})
+        }
+        return ret
+      },
+      set() {
+        this.onDrop(-1)
+      }
+    }
   },
   methods: {
     dbclick() {
@@ -148,7 +178,8 @@ export default {
           return;
       }
     },
-    startDrag(sample) {
+    startDrag(evt) {
+      let sample = this.containerSamples[evt.oldIndex]
       this.samples.toggleSelect(sample.parentId, sample.uid);
     },
     onDrop() {
@@ -169,7 +200,6 @@ export default {
           this.containerType,
           this.id
         );
-        console.log(ret);
         if (ret != null) {
           this.snackMessage = ret;
           this.snackbar = true;
@@ -205,11 +235,6 @@ export default {
         }
       }
     },
-    preventDrop(evt) {
-      if (this.canMoveTo && this.samples.hasSpace(this.id)) {
-        evt.preventDefault();
-      }
-    },
   },
 };
 </script>
@@ -237,6 +262,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   height: 100%;
+  width: 100%;
 }
 
 .counter {

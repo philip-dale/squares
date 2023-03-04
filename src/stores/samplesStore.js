@@ -2,8 +2,8 @@ import { defineStore } from 'pinia'
 import { settingsStore } from './settings'
 import { gameStateStore } from './gameState'
 
-function createPart(parts, parentId, uid) {
-    return {"parts": parts, "parentId": parentId, "uid": uid, "lives": settingsStore().getMaxLives, "selected": false}
+function createPart(parts, parentId, uid, containerIndex) {
+    return {"parts": parts, "parentId": parentId, "uid": uid, "lives": settingsStore().getMaxLives, "selected": false, containerIndex: containerIndex}
 }
 
 function generatePart(parts) {
@@ -196,19 +196,20 @@ export const samplesStore = defineStore('samples', {
                 parts[locations[locationIndex].x][locations[locationIndex].y] = cPart
                 locations.splice(locationIndex, 1)
             }
-            this.allSamples[containerId][this.count.toString()] = createPart(parts, containerId, this.count.toString())
+            this.allSamples[containerId][this.count.toString()] = createPart(parts, containerId, this.count.toString(), this.allSamples[containerId].length)
             this.count++
             this.setLocalStorage()
         },
         move(containerId, uid, newContainerId) {
             if(containerId != newContainerId) {
-                const newId = this.count.toString()
+                // const newId = this.count.toString()
                 this.count++
 
-                this.allSamples[newContainerId][newId] = this.allSamples[containerId][uid]
-                this.allSamples[newContainerId][newId]["parentId"] = newContainerId
-                this.allSamples[newContainerId][newId]["uid"] = newId
-                this.allSamples[newContainerId][newId]["selected"] = false
+                this.allSamples[newContainerId][uid] = this.allSamples[containerId][uid]
+                this.allSamples[newContainerId][uid]["parentId"] = newContainerId
+                this.allSamples[newContainerId][uid]["uid"] = uid
+                this.allSamples[newContainerId][uid]["selected"] = false
+                this.allSamples[newContainerId][uid]["containerIndex"] = 0
                 delete this.allSamples[containerId][uid]
                 this.setLocalStorage()
             }
@@ -268,7 +269,7 @@ export const samplesStore = defineStore('samples', {
                         i++
                     }
                     let newSample = mergeSample(samplesParts)
-                    this.allSamples[destId][this.count.toString()] = createPart(newSample, destId, this.count.toString())
+                    this.allSamples[destId][this.count.toString()] = createPart(newSample, destId, this.count.toString(), this.allSamples[destId].length)
                     this.count++
                     this.setLocalStorage()
                 } else {
@@ -291,6 +292,11 @@ export const samplesStore = defineStore('samples', {
                 this.allSamples[containerId][uid].selected = true
             }
             this.setLocalStorage()
+        },
+        organiseContainer(containerId, itemsArray) {
+            for(let i=0; i<itemsArray.length; i++) {
+                this.allSamples[containerId][itemsArray[i].uid]["containerIndex"] = i;
+            }
         }
     },
 })

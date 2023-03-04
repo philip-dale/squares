@@ -188,7 +188,6 @@ export const gameStateStore = defineStore('gameState', {
                     }
                 }
                 if(oneOfEach) {
-                    console.log("Level Won", this.getGameType, -1, this.playTime, this.gameLevel)
                     const board = scoreBoardStore()
                     board.addScore(this.getGameType, -1, this.playTime, this.gameLevel)
                     this.gameOver = true
@@ -230,7 +229,6 @@ export const gameStateStore = defineStore('gameState', {
             this.setLocalStorage()
         },
         spawnFull() {
-            console.log("Game Over", this.getGameType, this.getTotalCompleted, this.playTime, this.gameLevel)
             const board = scoreBoardStore()
             board.addScore(this.getGameType, this.getTotalCompleted, this.playTime, this.gameLevel)
             this.gameOver = true

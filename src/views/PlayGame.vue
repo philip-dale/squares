@@ -52,7 +52,7 @@ export default {
   setup() {
     const gameState = gameStateStore();
     const samples = samplesStore();
-    window.addEventListener('blur', () => {gameState.setGamePaused(true)});
+    window.addEventListener('blur', () => {gameState.setGamePaused(true); gameState.setLocalStorage(); });
     return {gameState, samples};
   },
   created() {

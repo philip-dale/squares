@@ -53,6 +53,7 @@ export default {
     const gameState = gameStateStore();
     const samples = samplesStore();
     window.addEventListener('blur', () => {gameState.setGamePaused(true); gameState.setLocalStorage(); });
+    window.addEventListener('onbeforeunload', () => {gameState.setLocalStorage()})
     return {gameState, samples};
   },
   created() {

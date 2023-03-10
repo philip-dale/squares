@@ -10,7 +10,7 @@
         'justify-content': alignItems,
       }"
     >
-      <draggable
+      <div
         class="ifContainer"
         v-if="showGhosts"
         :style="{
@@ -18,9 +18,22 @@
           'align-content': alignItems,
           'justify-content': alignItems,
         }"
-        v-model="ghostSamples" 
-        group="samples"
-        item-key="id">
+      >
+        <SampleDisplay
+          v-for="s in this.gameState.getmaxContibuters"
+          v-bind:key="s"
+          parent=""
+          uid=""
+          :ghostId="s - 1"
+        />
+      </div>
+      <draggable
+        class="sinkDropClass"
+        ghostClass="sinkGhostClass"
+        v-if="showGhosts"
+        v-model="ghostSamples"
+        item-key="id"
+        group="samples">
         <template #item="{element}">
           <SampleDisplay
             parent=""
@@ -38,15 +51,13 @@
           'align-content': alignItems,
           'justify-content': alignItems,
         }"
-        v-model="containerSamples" 
-        @start="startDrag($event)" 
+        v-model="containerSamples"
+        @start="startDrag($event)"
         group="samples"
-        item-key="id">
-        <template #item="{element}">
-          <SampleDisplay
-            :parent="element.parentId"
-            :uid="element.uid"
-          />
+        item-key="id"
+      >
+        <template #item="{ element }">
+          <SampleDisplay :parent="element.parentId" :uid="element.uid" />
         </template>
       </draggable>
     </div>
@@ -68,7 +79,7 @@ import { settingsStore } from "../stores/settings";
 import { gameStateStore } from "../stores/gameState";
 import SampleDisplay from "@/components/SampleDisplay.vue";
 
-import draggable from 'vuedraggable'
+import draggable from "vuedraggable";
 
 export default {
   name: "SampleContainer",
@@ -91,8 +102,8 @@ export default {
   data() {
     return {
       snackMessage: "",
-      snackbar: false
-    }
+      snackbar: false,
+    };
   },
   setup() {
     const samples = samplesStore();
@@ -137,30 +148,34 @@ export default {
     },
     containerSamples: {
       get() {
-        let ret = Object.keys(this.samples.containerSamples(this.id)).map((key) => ({uid: key, parentId:this.samples.containerSamples(this.id)[key].parentId, sortId:this.samples.containerSamples(this.id)[key].containerIndex }))
-        ret.sort(function(a, b){return a.sortId - b.sortId});
-        return ret
+        let ret = Object.keys(this.samples.containerSamples(this.id)).map(
+          (key) => ({
+            uid: key,
+            parentId: this.samples.containerSamples(this.id)[key].parentId,
+            sortId: this.samples.containerSamples(this.id)[key].containerIndex,
+          })
+        );
+        ret.sort(function (a, b) {
+          return a.sortId - b.sortId;
+        });
+        return ret;
       },
       set(val) {
-        this.onDrop()
+        this.onDrop();
         if (val.length > 1) {
-          this.samples.organiseContainer(this.id, val)
+          this.samples.organiseContainer(this.id, val);
         }
-        
-      }
+      },
     },
     ghostSamples: {
       get() {
-        let ret = []
-        for(let s = 0; s < this.gameState.getmaxContibuters; s++) {
-          ret.push({id: s})
-        }
-        return ret
+        let ret = [];
+        return ret;
       },
       set() {
-        this.onDrop(-1)
-      }
-    }
+        this.onDrop(-1);
+      },
+    },
   },
   methods: {
     dbclick() {
@@ -179,7 +194,7 @@ export default {
       }
     },
     startDrag(evt) {
-      let sample = this.containerSamples[evt.oldIndex]
+      let sample = this.containerSamples[evt.oldIndex];
       this.samples.toggleSelect(sample.parentId, sample.uid);
     },
     onDrop() {
@@ -206,7 +221,7 @@ export default {
         }
       } else {
         this.snackMessage = "Cannot Move here";
-          this.snackbar = true;
+        this.snackbar = true;
       }
     },
     spawn() {
@@ -284,4 +299,16 @@ export default {
   user-select: none;
 }
 
+.sinkGhostClass {
+  opacity: 0;
+  width: 0px;
+  padding: 0px;
+  border: 0px;
+}
+
+.sinkDropClass {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
 </style>

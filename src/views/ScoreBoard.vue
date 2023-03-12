@@ -10,6 +10,7 @@
       <v-window-item v-for="b in this.boards" :value="b.id" v-bind:key="b">
         <v-card v-if="b.id === 'oneOfEach'">
           <v-tabs
+            class="tabsClass"
             v-model="tabLevel"
             show-arrows
           >
@@ -17,7 +18,7 @@
               l.id
             }}</v-tab>
           </v-tabs>
-          <v-card-text>
+          <v-card-text class="tabsClass">
             <v-window v-model="tabLevel">
               <v-window-item v-for="l in b.values" :value="l.id" v-bind:key="l">
                 <table>
@@ -87,5 +88,12 @@ td {
 table {
   border: 1px solid;
   width: 100%;
+  background-color: var(--primary-background-colour);
+  color: var(--primary-colour);
+}
+
+.tabsClass {
+  background-color: var(--primary-background-colour);
+  color: var(--primary-colour);
 }
 </style>

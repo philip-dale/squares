@@ -1,15 +1,15 @@
 import { defineStore } from 'pinia'
 
 const gameLevels = {
-    1:  { maxContibuters: 2, maxDifferences: 1, minDifferences: 1, targetScoreIncrease: 6,  spawnTime: 10000},
-    2:  { maxContibuters: 3, maxDifferences: 1, minDifferences: 1, targetScoreIncrease: 10, spawnTime: 10000},
-    3:  { maxContibuters: 3, maxDifferences: 2, minDifferences: 1, targetScoreIncrease: 10, spawnTime: 9000 },
-    4:  { maxContibuters: 4, maxDifferences: 2, minDifferences: 1, targetScoreIncrease: 10, spawnTime: 9000 },
-    5:  { maxContibuters: 4, maxDifferences: 3, minDifferences: 1, targetScoreIncrease: 10, spawnTime: 8000 },
-    6:  { maxContibuters: 4, maxDifferences: 3, minDifferences: 2, targetScoreIncrease: 10, spawnTime: 8000 },
-    7:  { maxContibuters: 5, maxDifferences: 3, minDifferences: 2, targetScoreIncrease: 10, spawnTime: 7000 },
-    8:  { maxContibuters: 5, maxDifferences: 4, minDifferences: 2, targetScoreIncrease: 10, spawnTime: 7000 },
-    9:  { maxContibuters: 5, maxDifferences: 4, minDifferences: 3, targetScoreIncrease: 10, spawnTime: 6000 },
+    1: { maxContibuters: 2, maxDifferences: 1, minDifferences: 1, targetScoreIncrease: 6, spawnTime: 10000 },
+    2: { maxContibuters: 3, maxDifferences: 1, minDifferences: 1, targetScoreIncrease: 10, spawnTime: 10000 },
+    3: { maxContibuters: 3, maxDifferences: 2, minDifferences: 1, targetScoreIncrease: 10, spawnTime: 9000 },
+    4: { maxContibuters: 4, maxDifferences: 2, minDifferences: 1, targetScoreIncrease: 10, spawnTime: 9000 },
+    5: { maxContibuters: 4, maxDifferences: 3, minDifferences: 1, targetScoreIncrease: 10, spawnTime: 8000 },
+    6: { maxContibuters: 4, maxDifferences: 3, minDifferences: 2, targetScoreIncrease: 10, spawnTime: 8000 },
+    7: { maxContibuters: 5, maxDifferences: 3, minDifferences: 2, targetScoreIncrease: 10, spawnTime: 7000 },
+    8: { maxContibuters: 5, maxDifferences: 4, minDifferences: 2, targetScoreIncrease: 10, spawnTime: 7000 },
+    9: { maxContibuters: 5, maxDifferences: 4, minDifferences: 3, targetScoreIncrease: 10, spawnTime: 6000 },
     10: { maxContibuters: 6, maxDifferences: 4, minDifferences: 3, targetScoreIncrease: 10, spawnTime: 6000 },
     11: { maxContibuters: 6, maxDifferences: 5, minDifferences: 3, targetScoreIncrease: 10, spawnTime: 5000 },
     12: { maxContibuters: 6, maxDifferences: 6, minDifferences: 3, targetScoreIncrease: 10, spawnTime: 5000 },
@@ -28,6 +28,7 @@ export const settingsStore = defineStore('settings', {
         mergeInMin: 3,
         mergeOutMax: 1,
         sinkMax: -1,
+        darkMode: false,
     }),
     getters: {
         getSize: (state) => {
@@ -59,6 +60,19 @@ export const settingsStore = defineStore('settings', {
         getGameLevels: () => {
             return gameLevels
         },
+        getDarkMode: (state) => {
+            return state.darkMode
+        }
 
+    },
+    actions: {
+        setDarkMode(val) {
+            if (val) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+            this.darkMode = val;
+        }
     }
 })

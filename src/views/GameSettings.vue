@@ -3,17 +3,20 @@
     <div class="settings">
       <h1>Game Settings Page</h1>
     </div>
-    <v-btn @click="restartGameRequest()">Restart Game</v-btn>
+    <v-btn @click="restartGameRequest()" :color="darkMode ? 'grey-darken-2': 'gray'">Restart Game</v-btn>
     <v-select
       label="Select Level"
       :items="Object.keys(this.settings.getGameLevels)"
       v-model="currentLevel"
+      :color="darkMode ? 'grey-darken-2': 'gray'"
     ></v-select>
     <v-select
       label="Select Game Mode"
       :items="gameTypes"
       v-model="gameType"
+      :color="darkMode ? 'grey-darken-2': 'gray'"
     ></v-select>
+    <v-checkbox-btn v-model="darkMode">Dark Mode</v-checkbox-btn>
   </div>
   <OkCancelDialog title="Restart Game" message="All progress will be cleared if you restart the game" 
                    okText="Restart Game" :showDialog="this.restartDialogState" 
@@ -66,6 +69,9 @@ export default {
         this.requestedLevel = val
        this.changeLevelDialogState = true
       },
+      darkMode() {
+        return this.settings.getDarkMode;
+      },
     },
     gameType: {
       get() {
@@ -75,6 +81,14 @@ export default {
         this.requestedGameType = val
         this.changeGameDialogState = true
       },
+    },
+    darkMode: {
+      get() {
+        return this.settings.getDarkMode
+      },
+      set(val) {
+        this.settings.setDarkMode(val)
+      }
     },
     gameTypes() {
       return Object.keys(this.gameState.getGameTypes).map((key) => ({title:this.gameState.getGameTypes[key].name, value:key}))

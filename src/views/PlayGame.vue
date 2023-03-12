@@ -12,14 +12,14 @@
       <SampleContainer class="sink" id="5" containerType="sink"/>
   </div>
 
-  <GDialog v-model="gamePausedDialog" width="350px" local>
+  <GDialog v-model="gamePausedDialog" persistent width="350px" local>
     <div class="dialogWrapper">
       <div class="dialogContent">
         <div class="dialogTitle">Game Paused</div>
         Game Paused
       </div>
       <div class="actions">
-        <v-btn @click="this.gamePausedDialog = false">Play</v-btn>
+        <v-btn class="dialogBtn" @click="this.gamePausedDialog = false">Play</v-btn>
       </div>
     </div>
   </GDialog>
@@ -31,7 +31,7 @@
         Game Over, would you like to play again?
       </div>
       <div class="dialogActions">
-        <v-btn @click="this.gameState.reset(); this.samples.reset();">Play Again</v-btn>
+        <v-btn class="dialogBtn" @click="this.gameState.reset(); this.samples.reset();">Play Again</v-btn>
       </div>
     </div>
   </GDialog>
@@ -116,7 +116,8 @@ export default {
 }
 
 .dialogWrapper {
-  color: #000;
+  color: var(--primary-colour);
+  background: var(--primary-background-colour);
 }
 
 .dialogContent {
@@ -134,6 +135,11 @@ export default {
   justify-content: flex-end;
   padding: 10px 20px;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.dialogBtn {
+  background-color: var(--btn-color-bg);
+  color: var(--primary-colour);
 }
 
 </style>

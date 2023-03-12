@@ -1,5 +1,5 @@
 <template>
-  <div class="sampleDisplay" :style="{'border-color': boarderColor}" @click.stop='click()'>
+  <div class="sampleDisplay" v-bind:class="{'sampleDisplayStandard': !selected, 'sampleDisplaySelected': selected}" @click.stop='click()'>
     <div v-for="y in this.settings.getSize.y" v-bind:key="y" class="displayRow">
       <div
         v-for="x in this.settings.getSize.x"
@@ -52,13 +52,8 @@ export default {
       }
       
     },
-    boarderColor() {
-      if(this.ghostId === -1) {
-        if(this.samples.sample(this.parent, this.uid).selected) {
-          return 'red'
-        } 
-      }
-      return '#5c8d17'
+    selected() {
+      return this.samples.isSelected(this.parent, this.uid)
     }
   },
   methods: {
@@ -77,13 +72,21 @@ export default {
   flex-direction: column;
   justify-content: center;
   box-sizing: border-box;
-  border-radius: 5px;
+  border-radius: var(--primary-border-radius);
   border-style: solid;
-  border-width: 2px;
+  border-width: var(--primary-border-width);
   padding: 1px;
   margin: 2px;
   width: 3em;
   height: 3em;
+  
+}
+.sampleDisplayStandard {
+  border-color: var(--primary-border);
+} 
+
+.sampleDisplaySelected {
+  border-color: var(--primary-border-selected);
 }
 
 .displayRow {

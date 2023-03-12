@@ -267,7 +267,9 @@ export default {
   height: 100%;
   box-sizing: border-box;
   border-radius: 20px;
-  border: 2px solid #5c8d17;
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--primary-border);
   padding: 5px;
   display: flex;
   flex-wrap: wrap;
@@ -285,9 +287,12 @@ export default {
   left: 1.2em;
   position: absolute;
   display: flex;
-  border: 2px solid #5c8d17;
-  border-radius: 5px;
-  background-color: white;
+  border-width: var(--primary-border-width);
+  border-style: solid;
+  border-color: var(--primary-border);
+  border-radius: var(--primary-border-radius);
+  background-color: var(--primary-background-colour);
+  color: var(--primary-colour);
   width: 3.5em;
   text-align: center;
   display: inline-block;
@@ -297,6 +302,7 @@ export default {
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
+
 }
 
 .sinkGhostClass {

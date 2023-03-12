@@ -1,0 +1,21 @@
+:root {
+    --primary-colour: black;
+    --primary-colour-active: rgb(21, 34, 221);
+    --primary-border: #5c8d17;
+    --primary-border-selected: red;
+    --primary-border-width: 2px;
+    --primary-border-radius: 5px;
+    --primary-background-colour: rgb(238, 238, 238);
+    --part-separator-colour: black;
+    --part-separator-style: dotted;
+    --part-separator-width: 1px;
+    --btn-color-bg: rgb(238, 238, 238);
+  }
+
+  [data-theme="dark"] {
+    --primary-background-colour: #424242;
+    --primary-colour-active: rgb(25, 128, 187);
+    --primary-colour: white;
+    --part-separator-colour: rgb(248, 246, 246);
+    --btn-color-bg: #616161;
+  }

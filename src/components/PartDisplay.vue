@@ -22,9 +22,9 @@
   .partDisplay {
     height: 100%;
     width: 100%;
-    border-width: 1px;
-    border-color: black;
-    border-style: dotted;
+    border-width: var(--part-separator-width);
+    border-color: var(--part-separator-colour);
+    border-style: var(--part-separator-style);
     box-sizing: border-box;
   }
   

@@ -1,19 +1,20 @@
 <template>
-  <GDialog v-model="showDialogState" width="350px">
+  <GDialog v-model="showDialogState" width="350px" persistent local>
     <div class="dialogWrapper">
       <div class="dialogContent">
         <div class="dialogTitle">{{ this.title }}</div>
         {{ this.message }}
       </div>
       <div class="dialogActions">
-        <v-btn @click="$emit('okBtn')">{{ this.okText }}</v-btn>
-        <v-btn @click="$emit('cancelBtn')">Cancel</v-btn>
+        <v-btn class="dialogBtn" @click="$emit('okBtn')">{{ this.okText }}</v-btn>
+        <v-btn class="dialogBtn" @click="$emit('cancelBtn')">Cancel</v-btn>
       </div>
     </div>
   </GDialog>
 </template>
       
 <script>
+import { settingsStore } from "../stores/settings";
 
 export default {
   name: "OkCancelDialog",
@@ -35,10 +36,17 @@ export default {
         default: false
     },
   },
+  setup() {
+    const settings = settingsStore();
+    return { settings };
+  },
   computed:{
     showDialogState: {
       get() {
         return this.showDialog;
+      },
+      darkMode() {
+        return this.settings.getDarkMode;
       },
     },
   }
@@ -48,7 +56,8 @@ export default {
 
 <style scoped>
 .dialogWrapper {
-  color: #000;
+  color: var(--primary-colour);
+  background: var(--primary-background-colour);
 }
 
 .dialogContent {
@@ -66,5 +75,10 @@ export default {
   justify-content: flex-end;
   padding: 10px 20px;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.dialogBtn {
+  background-color: var(--btn-color-bg);
+  color: var(--primary-colour);
 }
 </style>

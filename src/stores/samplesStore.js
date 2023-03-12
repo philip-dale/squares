@@ -71,6 +71,14 @@ export const samplesStore = defineStore('samples', {
         sample: (state) => {
             return (containerId, uid) => state.allSamples[containerId][uid]
         },
+        isSelected: (state) => {
+            return (containerId, uid) => {
+                if (containerId in state.allSamples && uid in state.allSamples[containerId]) {
+                    return state.allSamples[containerId][uid].selected
+                }
+                return false
+            }
+        },
         hasSpace: (state) => {
             return (containerId) => {
                 if(state.storeCapacity[containerId] === -1) {
@@ -295,7 +303,14 @@ export const samplesStore = defineStore('samples', {
         },
         organiseContainer(containerId, itemsArray) {
             for(let i=0; i<itemsArray.length; i++) {
-                this.allSamples[containerId][itemsArray[i].uid]["containerIndex"] = i;
+                // TODO There is a bug here when organising!!!!
+                // to generate bug add multiple samples into a container, 
+                // drag left most to right most, 
+                // drag right most to another container
+
+                if(itemsArray[i].uid in this.allSamples[containerId]) {
+                    this.allSamples[containerId][itemsArray[i].uid]["containerIndex"] = i;
+                }
             }
         }
     },

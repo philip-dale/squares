@@ -66,6 +66,24 @@ export const settingsStore = defineStore('settings', {
 
     },
     actions: {
+        init() {
+            let settingsState = JSON.parse(localStorage.getItem("settings_state"))
+
+            if(settingsState != null){
+                if("darkMode" in settingsState) {
+                    this.setDarkMode(settingsState.darkMode)
+                }
+            }
+        },
+        setLocalStorage() {
+            var obj = new Object();
+            obj.darkMode = this.darkMode
+
+            localStorage.setItem("settings_state", JSON.stringify(obj))
+        },
+        clearLocalStorage() {
+            localStorage.clear("settings_state")
+        },
         setDarkMode(val) {
             if (val) {
                 document.documentElement.setAttribute('data-theme', 'dark');
@@ -73,6 +91,7 @@ export const settingsStore = defineStore('settings', {
                 document.documentElement.setAttribute('data-theme', 'light');
             }
             this.darkMode = val;
+            this.setLocalStorage()
         }
     }
 })

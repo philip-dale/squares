@@ -51,6 +51,7 @@ export default {
     const settings = settingsStore();
     gameState.init();
     gameScores.init();
+    settings.init();
     return { gameState, settings };
   },
   computed: {

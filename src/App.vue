@@ -5,7 +5,8 @@
       <v-spacer></v-spacer>
       <v-toolbar-title>Squares</v-toolbar-title>
       <v-spacer></v-spacer>
-      <img class="mr-3" :src="require('./assets/squares.png')" height="48" />
+      <img class="mr-3" v-if="darkMode" :src="require('./assets/squares_dark.png')" height="48" />
+      <img class="mr-3" v-else :src="require('./assets/squares_light.png')" height="48" />
     </v-toolbar>
     <div class="infoView">
       {{

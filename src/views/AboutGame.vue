@@ -47,7 +47,7 @@
           <p class="instructionText">For example, below both the top Cells only have red in them so the output Cells are red. The two centre Cells have 2 red and 1 green Cell each, so the result is red.</p>
           <img class="instruction_image" v-if="darkMode" :src="require('../assets/merge1_dark.png')"/>
           <img class="instruction_image" v-else :src="require('../assets/merge1_light.png')"/>
-          <p class="instructionText">In the next example, the top left Cell has a red blue and green input. AS no colour is dominant, one is picked at random. This time red is chosen, but each time it could be different.</p>
+          <p class="instructionText">In the next example, the top left Cell has a red blue and green input. As no colour is dominant, one is picked at random. This time green is chosen, but each time it could be different.</p>
           <img class="instruction_image" v-if="darkMode" :src="require('../assets/merge2_dark.png')"/>
           <img class="instruction_image" v-else :src="require('../assets/merge2_light.png')"/>
           <p class="instructionText">Each input Sample can only be used 3 times, and it fades each time it is used. After the 3rd use, it will disappear.</p>

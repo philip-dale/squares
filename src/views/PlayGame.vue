@@ -9,7 +9,9 @@
         <SampleMerger id="4"/>
         
       </div>
-      <SampleContainer class="sink" id="5" containerType="sink"/>
+      <div class="stores">
+        <SampleContainer class="sink" id="5" containerType="sink"/>
+      </div>
   </div>
 
   <GDialog v-model="gamePausedDialog" persistent width="350px" local>

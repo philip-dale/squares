@@ -38,7 +38,6 @@
               <p class="instructionText">Move Samples of a single colour into the bottom container to score</p>
             </div>
           </div>
-          <!-- <img class="instruction_image" :src="require('../assets/Instructions_basic.png')"/> -->
         </v-window-item>
         <v-window-item value="merging">
           <p class="instructionText">when Merging to create a new sample, the Cells of the input Samples contribute to the new Sample.</p>
@@ -51,7 +50,6 @@
           <img class="instruction_image" v-if="darkMode" :src="require('../assets/merge2_dark.png')"/>
           <img class="instruction_image" v-else :src="require('../assets/merge2_light.png')"/>
           <p class="instructionText">Each input Sample can only be used 3 times, and it fades each time it is used. After the 3rd use, it will disappear.</p>
-          <!-- <img class="instruction_image" :src="require('../assets/Instructions_merge.png')"/> -->
         </v-window-item>
         <v-window-item value="gameModes">
           <p class="instructionHeading">Aim</p>
@@ -62,7 +60,6 @@
           <p class="instructionText">This is the same as standard, but new Samples will automatically appear!</p>
           <p class="instructionHeading">One Of Each</p>
           <p class="instructionText">For the selected level, try to create one of each colour, as fast as possible</p>
-          <!-- <img class="instruction_image" :src="require('../assets/Instructions_modes.png')"/> -->
         </v-window-item>
     </v-window>
   </div>

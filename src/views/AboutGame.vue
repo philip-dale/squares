@@ -14,8 +14,10 @@
               <img class="instruction_image" v-else :src="require('../assets/top_section_light.png')"/>
             </div>
             <div class="instructionItem">
-              <p class="instructionText" style="position: relative; top: 10px;">Samples have 6 Cells which can be 1 of 6 colours</p>
-              <p class="instructionText" style="position: relative; top: 30px;">The Top Container is used to store and create new random Samples. To create a new random Sample, double click/tap on the container.</p>
+              <br>
+              <p class="instructionText">Samples have 6 Cells which can be 1 of 6 colours</p>
+              <br>
+              <p class="instructionText">The Top Container is used to store and create new random Samples. To create a new random Sample, double click/tap on the container.</p>
             </div>
           </div>
           <div class="instructionRow">

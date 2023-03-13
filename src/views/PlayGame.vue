@@ -9,7 +9,7 @@
         <SampleMerger id="4"/>
         
       </div>
-      <div class="stores">
+      <div class="sinks">
         <SampleContainer class="sink" id="5" containerType="sink"/>
       </div>
   </div>
@@ -97,12 +97,19 @@ export default {
   padding: 5px;
   height: 350px;
 }
+.sinks {
+  width: 100%;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 .spawn {
   width: 100%;
   height: 100%;
 }
 .mergers {
-  padding: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

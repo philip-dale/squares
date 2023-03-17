@@ -86,8 +86,8 @@ export default {
 .game {
   margin-top: 0px;
   width: 100%;
-  height: 100%;
-  display: flex;
+  /* height: 100%; */
+  display:block;
   flex-direction: column;
   justify-content: center;
   margin-left: 0px;
@@ -101,6 +101,8 @@ export default {
   width: 100%;
   padding-left: 5px;
   padding-right: 5px;
+  height: 11vh;
+  min-height: 11vh;
 }
 
 .spawn {

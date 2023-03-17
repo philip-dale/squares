@@ -10,7 +10,7 @@ function generatePart(parts) {
     let maxCount = 0
     let gameState = gameStateStore()
 
-    for(let i=0; i < gameState.getmaxContibuters; i++){
+    for(let i=0; i < gameState.getinputColours; i++){
         let len = parts.filter(x => x === i).length
         if (len > maxCount) {
             maxCount = len
@@ -18,7 +18,7 @@ function generatePart(parts) {
     }
 
     let contributingParts = []
-    for(let i=0; i < gameState.getmaxContibuters; i++){
+    for(let i=0; i < gameState.getinputColours; i++){
         if(parts.filter(x => x === i).length === maxCount) {
             contributingParts[contributingParts.length] = i
         }
@@ -176,7 +176,7 @@ export const samplesStore = defineStore('samples', {
             let size = settings.getSize
             const levelDetails = gameState.getGameLevelDetails
 
-            const baseSample = Math.floor(Math.random() * levelDetails.maxContibuters)
+            const baseSample = Math.floor(Math.random() * levelDetails.inputColours)
 
             var parts = new Array(size.x);
             for (let x = 0; x < size.x; x++) {
@@ -195,10 +195,11 @@ export const samplesStore = defineStore('samples', {
 
             let differences = Math.floor(Math.random() * ((levelDetails.maxDifferences + 1) - levelDetails.minDifferences) + levelDetails.minDifferences)
 
+            // need to determin new colours before loop using new metric
             for (let p = 0; p < differences; p++) {
                 let cPart = baseSample;
                 while (cPart == baseSample) {
-                    cPart = Math.floor(Math.random() * gameState.getmaxContibuters)
+                    cPart = Math.floor(Math.random() * gameState.getinputColours)
                 } 
                 let locationIndex = Math.floor(Math.random() * locations.length)
                 parts[locations[locationIndex].x][locations[locationIndex].y] = cPart

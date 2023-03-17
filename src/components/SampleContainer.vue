@@ -20,7 +20,7 @@
         }"
       >
         <SampleDisplay
-          v-for="s in this.gameState.getmaxContibuters"
+          v-for="s in this.gameState.getinputColours"
           v-bind:key="s"
           parent=""
           uid=""

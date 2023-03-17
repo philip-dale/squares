@@ -114,14 +114,14 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-content: flex-start;
-  height: 40vh;
-  min-height: 40vh;
+  height: 34vh;
+  min-height: 34vh;
   width: 100%;
 }
 
 .sink {
-  height: 10vh;
-  min-height: 10vh;
+  height: 8vh;
+  min-height: 8vh;
 }
 
 .dialogWrapper {

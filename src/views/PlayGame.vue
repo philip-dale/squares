@@ -95,7 +95,7 @@ export default {
 .stores {
   width: 100%;
   padding: 5px;
-  height: 350px;
+  height: 400px;
 }
 .sinks {
   width: 100%;

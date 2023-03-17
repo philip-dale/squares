@@ -94,7 +94,7 @@ body {
 }
 .squareApp {
   max-width: 500px;
-  min-width: 300px;
+  min-width: 350px;
   align-self: center;
   align-items: flex-start;
   flex-grow: 1;

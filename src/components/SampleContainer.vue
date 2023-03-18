@@ -263,14 +263,13 @@ export default {
 
 .sampleContainer {
   width: 100%;
-  /* min-height: 100%; */
   height: 100%;
   box-sizing: border-box;
   border-radius: 20px;
   border-width: 2px;
   border-style: solid;
   border-color: var(--primary-border);
-  padding: 5px;
+  padding: 15px;
   display: flex;
   flex-wrap: wrap;
 }

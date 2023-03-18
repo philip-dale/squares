@@ -10,6 +10,7 @@
     --part-separator-style: dotted;
     --part-separator-width: 1px;
     --btn-color-bg: rgb(238, 238, 238);
+    --html-background-colour: white;
   }
 
   [data-theme="dark"] {
@@ -18,4 +19,5 @@
     --primary-colour: white;
     --part-separator-colour: rgb(248, 246, 246);
     --btn-color-bg: #616161;
+    --html-background-colour: black;
   }

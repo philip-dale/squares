@@ -213,10 +213,6 @@ export const samplesStore = defineStore('samples', {
 
             // need to determin new colours before loop using new metric
             for (let p = 0; p < differences; p++) {
-                // let cPart = baseSample;
-                // while (cPart == baseSample) {
-                //     cPart = Math.floor(Math.random() * gameState.getinputColours)
-                // } 
                 let cPart = ColoursToUse[Math.floor(Math.random() * ColoursToUse.length)]
                 let locationIndex = Math.floor(Math.random() * locations.length)
                 parts[locations[locationIndex].x][locations[locationIndex].y] = cPart

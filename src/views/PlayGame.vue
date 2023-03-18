@@ -1,7 +1,7 @@
 <template>
   <div class="game">
       <div class="stores">
-        <SampleContainer class="spawn" id="1" containerType="spawn"/>
+        <SampleContainer id="1" containerType="spawn"/>
       </div>
       <div class="mergers">
         <SampleMerger id="2"/>
@@ -10,7 +10,7 @@
         
       </div>
       <div class="sinks">
-        <SampleContainer class="sink" id="5" containerType="sink"/>
+        <SampleContainer id="5" containerType="sink"/>
       </div>
   </div>
 
@@ -87,7 +87,7 @@ export default {
   margin-top: 0px;
   width: 100%;
   height: 100%;
-  display: flex;
+  display:block;
   flex-direction: column;
   justify-content: center;
   margin-left: 0px;
@@ -95,7 +95,7 @@ export default {
 .stores {
   width: 100%;
   padding: 5px;
-  height: 400px;
+  min-height: 280px;
 }
 .sinks {
   width: 100%;
@@ -103,10 +103,6 @@ export default {
   padding-right: 5px;
 }
 
-.spawn {
-  width: 100%;
-  height: 100%;
-}
 .mergers {
   padding-left: 5px;
   padding-right: 5px;
@@ -114,14 +110,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-content: flex-start;
-  height: 34vh;
-  min-height: 34vh;
   width: 100%;
-}
-
-.sink {
-  height: 8vh;
-  min-height: 8vh;
 }
 
 .dialogWrapper {
@@ -151,4 +140,10 @@ export default {
   color: var(--primary-colour);
 }
 
+</style>
+<style>
+
+.stores .outerContainer .sampleContainer {
+  min-height: 270px;
+}
 </style>

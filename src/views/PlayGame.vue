@@ -144,6 +144,10 @@ export default {
 <style>
 
 .stores .outerContainer .sampleContainer {
-  min-height: 270px;
+  min-height: 280px;
+}
+
+.stores .outerContainer .sampleContainer .ifContainer{
+  min-height: 280px;
 }
 </style>

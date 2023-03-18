@@ -277,6 +277,7 @@ export default {
 .ifContainer {
   display: flex;
   flex-wrap: wrap;
+  min-height: 4em;
   height: 100%;
   width: 100%;
 }

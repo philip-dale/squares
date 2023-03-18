@@ -96,7 +96,7 @@ body {
   background-color: var(--primary-background-colour);
 }
 .squareApp {
-  max-width: 500px;
+  max-width: 480px;
   min-width: 350px;
   align-self: center;
   align-items: flex-start;

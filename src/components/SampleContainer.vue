@@ -263,7 +263,6 @@ export default {
 
 .sampleContainer {
   width: 100%;
-  /* min-height: 100%; */
   height: 100%;
   box-sizing: border-box;
   border-radius: 20px;

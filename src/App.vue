@@ -75,7 +75,6 @@ body {
   width: 100%;
   margin: 0;
   padding: 0;
-  /* display: flex; */
   align-self: center;
 }
 
@@ -97,12 +96,9 @@ body {
   min-width: 350px;
   align-self: center;
   align-items: flex-start;
-  /* flex-grow: 1; */
-  /* display: flex; */
 }
 
 .mainview {
-  /* flex-grow: 1; */
   background-color: var(--primary-background-colour);
   color: var(--primary-colour);
 }

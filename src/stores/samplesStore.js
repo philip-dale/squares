@@ -195,12 +195,29 @@ export const samplesStore = defineStore('samples', {
 
             let differences = Math.floor(Math.random() * ((levelDetails.maxDifferences + 1) - levelDetails.minDifferences) + levelDetails.minDifferences)
 
+            // Get list of colours we can use for the different cells
+            let availableColours = new Array(levelDetails.inputColours - 1);
+            let colourStep = 0;
+            for(let c=0; c<levelDetails.inputColours-1; c++) {
+                if(c == baseSample) {
+                    colourStep += 1;
+                }
+                availableColours[c] = colourStep;
+                colourStep += 1;
+            }
+
+            let ColoursToUse = new Array(levelDetails.difftotalColours)
+            for(let c=0; c<levelDetails.difftotalColours; c++) {
+                ColoursToUse[c] = availableColours[Math.floor(Math.random() * availableColours.length)]
+            }
+
             // need to determin new colours before loop using new metric
             for (let p = 0; p < differences; p++) {
-                let cPart = baseSample;
-                while (cPart == baseSample) {
-                    cPart = Math.floor(Math.random() * gameState.getinputColours)
-                } 
+                // let cPart = baseSample;
+                // while (cPart == baseSample) {
+                //     cPart = Math.floor(Math.random() * gameState.getinputColours)
+                // } 
+                let cPart = ColoursToUse[Math.floor(Math.random() * ColoursToUse.length)]
                 let locationIndex = Math.floor(Math.random() * locations.length)
                 parts[locations[locationIndex].x][locations[locationIndex].y] = cPart
                 locations.splice(locationIndex, 1)

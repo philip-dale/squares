@@ -16,10 +16,10 @@ const gameLevels = {
     13: { inputColours: 5, maxDifferences: 4, minDifferences: 3, difftotalColours: 3, targetScoreIncrease: 10, spawnTime: 6000 },
     14: { inputColours: 6, maxDifferences: 4, minDifferences: 3, difftotalColours: 3, targetScoreIncrease: 10, spawnTime: 6000 },
     15: { inputColours: 6, maxDifferences: 5, minDifferences: 3, difftotalColours: 3, targetScoreIncrease: 10, spawnTime: 5000 },
-    16: { inputColours: 6, maxDifferences: 6, minDifferences: 3, difftotalColours: 3, targetScoreIncrease: 10, spawnTime: 5000 },
-    17: { inputColours: 6, maxDifferences: 6, minDifferences: 4, difftotalColours: 4, targetScoreIncrease: 10, spawnTime: 4000 },
-    18: { inputColours: 6, maxDifferences: 6, minDifferences: 5, difftotalColours: 5, targetScoreIncrease: 10, spawnTime: 4000 },
-    19: { inputColours: 6, maxDifferences: 6, minDifferences: 6, difftotalColours: 5, targetScoreIncrease: 10, spawnTime: 4000 },
+    16: { inputColours: 6, maxDifferences: 5, minDifferences: 4, difftotalColours: 3, targetScoreIncrease: 10, spawnTime: 5000 },
+    17: { inputColours: 6, maxDifferences: 5, minDifferences: 4, difftotalColours: 4, targetScoreIncrease: 10, spawnTime: 4000 },
+    18: { inputColours: 6, maxDifferences: 5, minDifferences: 5, difftotalColours: 4, targetScoreIncrease: 10, spawnTime: 4000 },
+    19: { inputColours: 6, maxDifferences: 5, minDifferences: 5, difftotalColours: 5, targetScoreIncrease: 10, spawnTime: 4000 },
 }
 
 export const settingsStore = defineStore('settings', {

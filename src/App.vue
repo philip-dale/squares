@@ -76,6 +76,7 @@ body {
   margin: 0;
   padding: 0;
   align-self: center;
+  background-color: var(--html-background-colour);
 }
 
 #app {
@@ -83,7 +84,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   height: 100%;
   width: 100%;
   display: flex;
@@ -91,11 +91,16 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+.v-application__wrap {
+  background-color: var(--primary-background-colour);
+}
 .squareApp {
   max-width: 500px;
   min-width: 350px;
   align-self: center;
   align-items: flex-start;
+  height: 100%;
 }
 
 .mainview {

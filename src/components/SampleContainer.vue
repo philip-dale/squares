@@ -269,7 +269,7 @@ export default {
   border-width: 2px;
   border-style: solid;
   border-color: var(--primary-border);
-  padding: 5px;
+  padding: 15px;
   display: flex;
   flex-wrap: wrap;
 }

@@ -27,7 +27,7 @@ export const gameStateStore = defineStore('gameState', {
         },
         getTotalCompleted: (state) => {
             let total = 0
-            for(let i=0; i<state.getmaxContibuters; i++) {
+            for(let i=0; i<state.getinputColours; i++) {
                 if(i.toString() in state.samplesCompleted ) {
                     total += state.samplesCompleted[i.toString()]
                 }
@@ -39,7 +39,7 @@ export const gameStateStore = defineStore('gameState', {
         },
         getLevelTotalCompleted: (state) => {
             let total = 0
-            for(let i=0; i<state.getmaxContibuters; i++) {
+            for(let i=0; i<state.getinputColours; i++) {
                 if(i.toString() in state.samplesCompletedAtLevel ) {
                     total += state.samplesCompletedAtLevel[i.toString()]
                 }
@@ -62,9 +62,9 @@ export const gameStateStore = defineStore('gameState', {
             const settings = settingsStore()
             return settings.getGameLevels[state.gameLevel]
         },
-        getmaxContibuters: (state) => {
+        getinputColours: (state) => {
             const settings = settingsStore()
-            return settings.getGameLevels[state.gameLevel].maxContibuters
+            return settings.getGameLevels[state.gameLevel].inputColours
         },
         getGameTypes: () => {
             return gameTypes
@@ -111,7 +111,7 @@ export const gameStateStore = defineStore('gameState', {
                     playtimeIncrement
                 )
                 
-                for(let i=0; i<this.getmaxContibuters; i++) {
+                for(let i=0; i<this.getinputColours; i++) {
                     let key = i.toString()
                     if("samplesCompleted" in gameState) {
                         if(Object.keys(gameState.samplesCompleted).includes(key)) {
@@ -134,7 +134,7 @@ export const gameStateStore = defineStore('gameState', {
             }
         },
         reset() {
-            for(let i=0; i<this.getmaxContibuters; i++) {
+            for(let i=0; i<this.getinputColours; i++) {
                 this.samplesCompleted[i.toString()] = 0
                 this.samplesCompletedAtLevel[i.toString()] = 0
             }
@@ -181,7 +181,7 @@ export const gameStateStore = defineStore('gameState', {
 
             if(this.gameType === "oneOfEach"){
                 let oneOfEach = true;
-                for(let i=0; i<this.getmaxContibuters; i++) {
+                for(let i=0; i<this.getinputColours; i++) {
                     if(this.samplesCompletedAtLevel[i.toString()] === 0) {
                         oneOfEach = false
                         break
@@ -197,7 +197,7 @@ export const gameStateStore = defineStore('gameState', {
             this.setLocalStorage()
         },
         clearCompletedAtLevel() {
-            for(let i=0; i<this.getmaxContibuters; i++) {
+            for(let i=0; i<this.getinputColours; i++) {
                 this.samplesCompletedAtLevel[i.toString()] = 0
             }
             this.setLocalStorage()

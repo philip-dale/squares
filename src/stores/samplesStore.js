@@ -331,11 +331,6 @@ export const samplesStore = defineStore('samples', {
         },
         organiseContainer(containerId, itemsArray) {
             for (let i = 0; i < itemsArray.length; i++) {
-                // TODO There is a bug here when organising!!!!
-                // to generate bug add multiple samples into a container, 
-                // drag left most to right most, 
-                // drag right most to another container
-
                 if (itemsArray[i].uid in this.allSamples[containerId]) {
                     this.allSamples[containerId][itemsArray[i].uid]["containerIndex"] = i;
                 }

@@ -113,7 +113,7 @@ export default {
     return { samples, settings, gameState };
   },
   created() {
-    this.samples.init(this.id, this.maxSamples);
+    this.samples.subscribe(this.id, this.maxSamples);
     if (this.canSpawn) {
       this.gameState.setSpawnTimer(
         this.autoSpawn,
@@ -152,11 +152,11 @@ export default {
           (key) => ({
             uid: key,
             parentId: this.samples.containerSamples(this.id)[key].parentId,
-            sortId: this.samples.containerSamples(this.id)[key].containerIndex,
+            containerIndex: this.samples.containerSamples(this.id)[key].containerIndex,
           })
         );
         ret.sort(function (a, b) {
-          return a.sortId - b.sortId;
+          return a.containerIndex - b.containerIndex;
         });
         return ret;
       },

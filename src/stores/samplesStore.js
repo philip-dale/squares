@@ -3,14 +3,14 @@ import { settingsStore } from './settings'
 import { gameStateStore } from './gameState'
 
 function createPart(parts, parentId, uid, containerIndex) {
-    return {"parts": parts, "parentId": parentId, "uid": uid, "lives": settingsStore().getMaxLives, "selected": false, containerIndex: containerIndex}
+    return { "parts": parts, "parentId": parentId, "uid": uid, "lives": settingsStore().getMaxLives, "selected": false, containerIndex: containerIndex }
 }
 
 function generatePart(parts) {
     let maxCount = 0
     let gameState = gameStateStore()
 
-    for(let i=0; i < gameState.getinputColours; i++){
+    for (let i = 0; i < gameState.getinputColours; i++) {
         let len = parts.filter(x => x === i).length
         if (len > maxCount) {
             maxCount = len
@@ -18,8 +18,8 @@ function generatePart(parts) {
     }
 
     let contributingParts = []
-    for(let i=0; i < gameState.getinputColours; i++){
-        if(parts.filter(x => x === i).length === maxCount) {
+    for (let i = 0; i < gameState.getinputColours; i++) {
+        if (parts.filter(x => x === i).length === maxCount) {
             contributingParts[contributingParts.length] = i
         }
     }
@@ -53,7 +53,7 @@ function mergeSample(samples) {
         for (let y = 0; y < size.y; y++) {
 
             var partsInput = new Array(sampleCount);
-            for(let s = 0; s < sampleCount; s++) {
+            for (let s = 0; s < sampleCount; s++) {
                 partsInput[s] = samples[s][x][y]
             }
             newSampleparts[x][y] = generatePart(partsInput)
@@ -63,8 +63,16 @@ function mergeSample(samples) {
 }
 
 export const samplesStore = defineStore('samples', {
-    state: () => ({allSamples:{}, count:0, storeCapacity:{}, selected:{'parentId':-1, "uid":-1} }),
+    state: () => ({ 
+        allSamples: {}, 
+        count: 0, // keeps track of how may items have been creted since start/reset
+        storeCapacity: {}, 
+        selected: { 'parentId': -1, "uid": -1 } 
+    }),
     getters: {
+        getTotalCreated: (state) => {
+            return state.count
+        },
         containerSamples: (state) => {
             return (containerId) => state.allSamples[containerId]
         },
@@ -81,7 +89,7 @@ export const samplesStore = defineStore('samples', {
         },
         hasSpace: (state) => {
             return (containerId) => {
-                if(state.storeCapacity[containerId] === -1) {
+                if (state.storeCapacity[containerId] === -1) {
                     return true
                 }
                 return Object.keys(state.allSamples[containerId]).length < state.storeCapacity[containerId]
@@ -95,7 +103,7 @@ export const samplesStore = defineStore('samples', {
         },
         selectedPureVal: (state) => {
             return () => {
-                if(state.selected.parentId != -1) {
+                if (state.selected.parentId != -1) {
                     return isPureSample(state.allSamples[state.selected.parentId][state.selected.uid].parts)
                 }
                 return -1
@@ -103,44 +111,46 @@ export const samplesStore = defineStore('samples', {
         },
         canSpawn: () => {
             return (containerType) => {
-                switch(containerType) {
-                case "spawn":
-                    return true
+                switch (containerType) {
+                    case "spawn":
+                        return true
                 }
                 return false
             }
         },
         canMoveTo: () => {
             return (containerType) => {
-                switch(containerType) {
-                case "spawn":
-                case "merge-in":
-                case "sink":
-                    return true
+                switch (containerType) {
+                    case "spawn":
+                    case "merge-in":
+                    case "sink":
+                        return true
                 }
                 return false
             }
         },
         canDestroy: () => {
             return (containerType) => {
-                switch(containerType) {
-                case "sink":
-                    return true
+                switch (containerType) {
+                    case "sink":
+                        return true
                 }
                 return false
             }
         },
     },
     actions: {
-        init(containerId, capacity) {
+        init() {
             let storeState = JSON.parse(localStorage.getItem("store_state"))
 
-            if(storeState != null && "count" in storeState && storeState.count >= this.count){
-                this.count = storeState.count + 1
+            if (storeState != null && "count" in storeState) {
+                this.count = storeState.count
             }
-
-            if(!(containerId in this.allSamples )) {
-                if(storeState != null && "allSamples" in storeState && Object.keys(storeState.allSamples).includes(containerId)){
+        },
+        subscribe(containerId, capacity) {
+            let storeState = JSON.parse(localStorage.getItem("store_state"))
+            if (!(containerId in this.allSamples)) {
+                if (storeState != null && "allSamples" in storeState && Object.keys(storeState.allSamples).includes(containerId)) {
                     this.allSamples[containerId] = storeState.allSamples[containerId]
                 } else {
                     this.allSamples[containerId] = {}
@@ -152,8 +162,8 @@ export const samplesStore = defineStore('samples', {
             for (const key of Object.keys(this.allSamples)) {
                 this.allSamples[key] = {}
             }
-            this.count = 0, 
-            this.selected = {'parentId':-1, "uid":-1}
+            this.count = 0,
+                this.selected = { 'parentId': -1, "uid": -1 }
             this.setLocalStorage()
         },
         setLocalStorage() {
@@ -188,7 +198,7 @@ export const samplesStore = defineStore('samples', {
             let locationsCount = 0
             for (let x = 0; x < size.x; x++) {
                 for (let y = 0; y < size.y; y++) {
-                    locations[locationsCount] = {"x":x, "y":y}
+                    locations[locationsCount] = { "x": x, "y": y }
                     locationsCount++
                 }
             }
@@ -198,8 +208,8 @@ export const samplesStore = defineStore('samples', {
             // Get list of colours we can use for the different cells
             let availableColours = new Array(levelDetails.inputColours - 1);
             let colourStep = 0;
-            for(let c=0; c<levelDetails.inputColours-1; c++) {
-                if(c == baseSample) {
+            for (let c = 0; c < levelDetails.inputColours - 1; c++) {
+                if (c == baseSample) {
                     colourStep += 1;
                 }
                 availableColours[c] = colourStep;
@@ -207,7 +217,7 @@ export const samplesStore = defineStore('samples', {
             }
 
             let ColoursToUse = new Array(levelDetails.difftotalColours)
-            for(let c=0; c<levelDetails.difftotalColours; c++) {
+            for (let c = 0; c < levelDetails.difftotalColours; c++) {
                 ColoursToUse[c] = availableColours[Math.floor(Math.random() * availableColours.length)]
             }
 
@@ -223,7 +233,7 @@ export const samplesStore = defineStore('samples', {
             this.setLocalStorage()
         },
         move(containerId, uid, newContainerId) {
-            if(containerId != newContainerId) {
+            if (containerId != newContainerId) {
                 // const newId = this.count.toString()
                 this.count++
 
@@ -237,26 +247,30 @@ export const samplesStore = defineStore('samples', {
             }
         },
         moveSelected(newContainerId) {
-            if(this.selected.parentId != -1 && this.selected.parentId != newContainerId) {
+            if (this.selected.parentId != -1 && this.selected.parentId != newContainerId) {
                 this.move(this.selected.parentId, this.selected.uid, newContainerId)
-                this.selected.parentId = -1
-                this.selected.uid = -1
-                this.setLocalStorage()
             }
+            this.selected.parentId = -1
+            this.selected.uid = -1
+            this.setLocalStorage()
         },
         moveSelectedToContainer(newContainerType, newContainerId) {
             let gameState = gameStateStore()
             const pureVal = this.selectedPureVal()
             if (this.canDestroy(newContainerType)) {
-                if(pureVal != -1) {
+                if (pureVal != -1) {
                     gameState.addCompletedSample(pureVal)
                     this.removeSelected();
                 } else {
+                    this.selected.parentId = -1
+                    this.selected.uid = -1
                     return "Not Single Colour"
                 }
-            } else if(this.hasSpace(newContainerId)){
+            } else if (this.hasSpace(newContainerId)) {
                 this.moveSelected(newContainerId)
             } else {
+                this.selected.parentId = -1
+                this.selected.uid = -1
                 return "No Space"
             }
             this.setLocalStorage()
@@ -266,7 +280,7 @@ export const samplesStore = defineStore('samples', {
             this.setLocalStorage()
         },
         removeSelected() {
-            if(this.selected.parentId != -1){
+            if (this.selected.parentId != -1) {
                 delete this.allSamples[this.selected.parentId][this.selected.uid]
                 this.selected.parentId = -1
                 this.selected.uid = -1
@@ -276,15 +290,15 @@ export const samplesStore = defineStore('samples', {
         merge(containerId, destId) {
             const settings = settingsStore()
             if (Object.keys(this.allSamples[destId]).length < this.storeCapacity[destId]) {
-                if(Object.keys(this.allSamples[containerId]).length >= settings.getMergeInMin) {
-                
+                if (Object.keys(this.allSamples[containerId]).length >= settings.getMergeInMin) {
+
                     let samplesParts = new Array(Object.keys(this.allSamples[containerId]).length);
 
                     let i = 0
                     for (const [key, value] of Object.entries(this.allSamples[containerId])) {
                         samplesParts[i] = value.parts
                         this.allSamples[containerId][key].lives--
-                        if(this.allSamples[containerId][key].lives < 1) {
+                        if (this.allSamples[containerId][key].lives < 1) {
                             delete this.allSamples[containerId][key]
                         }
 
@@ -302,10 +316,10 @@ export const samplesStore = defineStore('samples', {
             }
         },
         toggleSelect(containerId, uid) {
-            if(this.selected.parentId != -1) {
+            if (this.selected.parentId != -1) {
                 this.allSamples[this.selected.parentId][this.selected.uid].selected = false
             }
-            if(this.selected.parentId === containerId && this.selected.uid == uid) {
+            if (this.selected.parentId === containerId && this.selected.uid == uid) {
                 this.selected.parentId = -1
                 this.selected.uid = -1
             } else {
@@ -316,13 +330,8 @@ export const samplesStore = defineStore('samples', {
             this.setLocalStorage()
         },
         organiseContainer(containerId, itemsArray) {
-            for(let i=0; i<itemsArray.length; i++) {
-                // TODO There is a bug here when organising!!!!
-                // to generate bug add multiple samples into a container, 
-                // drag left most to right most, 
-                // drag right most to another container
-
-                if(itemsArray[i].uid in this.allSamples[containerId]) {
+            for (let i = 0; i < itemsArray.length; i++) {
+                if (itemsArray[i].uid in this.allSamples[containerId]) {
                     this.allSamples[containerId][itemsArray[i].uid]["containerIndex"] = i;
                 }
             }

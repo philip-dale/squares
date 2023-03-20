@@ -44,15 +44,18 @@
 import { gameStateStore } from "./stores/gameState";
 import { scoreBoardStore } from "./stores/gameScores";
 import { settingsStore } from "./stores/settings";
+import { samplesStore } from "./stores/samplesStore";
 
 export default {
   setup() {
     const gameState = gameStateStore();
     const gameScores = scoreBoardStore();
     const settings = settingsStore();
+    const samples = samplesStore();
     gameState.init();
     gameScores.init();
     settings.init();
+    samples.init();
     return { gameState, settings };
   },
   computed: {

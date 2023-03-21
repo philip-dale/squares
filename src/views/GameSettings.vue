@@ -5,16 +5,17 @@
     </div>
     <v-btn @click="restartGameRequest()" :color="darkMode ? 'grey-darken-2': 'gray'">Restart Game</v-btn>
     <v-select
-      label="Select Level"
-      :items="Object.keys(this.settings.getGameLevels)"
-      v-model="currentLevel"
-      :color="darkMode ? 'grey-darken-2': 'gray'"
-    ></v-select>
-    <v-select
       label="Select Game Mode"
       :items="gameTypes"
       v-model="gameType"
       :color="darkMode ? 'grey-darken-2': 'gray'"
+    ></v-select>
+    <v-select
+      label="Select Level"
+      :items="Object.keys(this.settings.getGameLevels)"
+      v-model="currentLevel"
+      :color="darkMode ? 'grey-darken-2': 'gray'"
+      :disabled="this.disableLevelSelect"
     ></v-select>
     <v-checkbox-btn v-model="darkMode">Dark Mode</v-checkbox-btn>
   </div>
@@ -92,6 +93,12 @@ export default {
     },
     gameTypes() {
       return Object.keys(this.gameState.getGameTypes).map((key) => ({title:this.gameState.getGameTypes[key].name, value:key}))
+    },
+    disableLevelSelect() {
+      if(this.gameType == "oneOfEach") {
+        return false
+      }
+      return true
     }
   },
   methods: {

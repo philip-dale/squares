@@ -276,9 +276,11 @@ export const samplesStore = defineStore('samples', {
                 // console.log("Has Space", this.selected.parentId, this.selected.uid)
                 this.moveSelected(newContainerId)
             } else {
-                this.allSamples[this.selected.parentId][this.selected.uid].selected = false
-                this.selected.parentId = -1
-                this.selected.uid = -1
+                if(this.selected.parentId != -1) {
+                    this.allSamples[this.selected.parentId][this.selected.uid].selected = false
+                    this.selected.parentId = -1
+                    this.selected.uid = -1
+                }
                 return "No Space"
             }
             this.setLocalStorage()

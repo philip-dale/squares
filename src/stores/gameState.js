@@ -149,6 +149,9 @@ export const gameStateStore = defineStore('gameState', {
             )
             this.gamePaused = true
             this.gameOver = false
+            if(this.gameType != "oneOfEach") {
+                this.gameLevel = 1
+            }
             this.setLocalStorage()
         },
         setLocalStorage() {

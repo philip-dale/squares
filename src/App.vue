@@ -12,8 +12,7 @@
       {{
         "Mode = " +
         this.gameState.getGameTypeName +
-        ", Level = " +
-        this.gameState.getGameLevel.toString() +
+        this.levelOrChallengeMessage +
         ", Score = " +
         this.gameState.getTotalCompleted.toString()
       }}
@@ -62,6 +61,12 @@ export default {
     darkMode() {
       return this.settings.getDarkMode;
     },
+    levelOrChallengeMessage() {
+      if(this.gameState.getGameType === "challenge") {
+        return ", Challenge = " + this.gameState.getChallenge.toString()
+      } 
+      return ", Level = " + this.gameState.getGameLevel.toString()
+    }
   },
   data: () => ({
     drawer: false,

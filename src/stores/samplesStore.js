@@ -111,6 +111,10 @@ export const samplesStore = defineStore('samples', {
         },
         canSpawn: () => {
             return (containerType) => {
+                let gameState = gameStateStore()
+                if(gameState.getGameType === "challenge") {
+                    return false
+                }
                 switch (containerType) {
                     case "spawn":
                         return true
@@ -162,8 +166,21 @@ export const samplesStore = defineStore('samples', {
             for (const key of Object.keys(this.allSamples)) {
                 this.allSamples[key] = {}
             }
-            this.count = 0,
-                this.selected = { 'parentId': -1, "uid": -1 }
+            this.count = 0
+            this.selected = { 'parentId': -1, "uid": -1 }
+
+            const gameState = gameStateStore()
+            const settings = settingsStore()
+            if(gameState.gameType === "challenge") {
+                this.allSamples["1"] = {}
+                let samples = settings.getChallenges[gameState.getChallenge].samples
+
+                for(let i=0; i<samples.length; i++) {
+                    this.allSamples["1"][this.count.toString()] = createPart(samples[i], "1", this.count.toString(), this.count)
+                    this.count++
+                }
+            }
+
             this.setLocalStorage()
         },
         setLocalStorage() {
@@ -267,10 +284,12 @@ export const samplesStore = defineStore('samples', {
                     gameState.addCompletedSample(pureVal)
                     this.removeSelected();
                 } else {
-                    this.allSamples[this.selected.parentId][this.selected.uid].selected = false
-                    this.selected.parentId = -1
-                    this.selected.uid = -1
-                    return "Not Single Colour"
+                    if(this.selected.parentId != -1) {
+                        this.allSamples[this.selected.parentId][this.selected.uid].selected = false
+                        this.selected.parentId = -1
+                        this.selected.uid = -1
+                        return "Not Single Colour"
+                    }
                 }
             } else if (this.hasSpace(newContainerId)) {
                 // console.log("Has Space", this.selected.parentId, this.selected.uid)

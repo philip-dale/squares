@@ -22,6 +22,36 @@ const gameLevels = {
     19: { inputColours: 6, maxDifferences: 5, minDifferences: 5, difftotalColours: 5, targetScoreIncrease: 10, spawnTime: 4000 },
 }
 
+const challenges = {
+    1: {
+        name: "First Two Colours",
+        inputColours: 2,
+        samples: [
+            [[1,1,1], [0,1,1]], 
+            [[1,1,1], [1,0,1]],
+            [[1,1,1], [1,1,0]], 
+            [[0,0,0], [1,0,0]],
+            [[0,0,0], [0,1,0]], 
+            [[0,0,0], [0,0,1]],
+        ]
+    },
+    2: {
+        name: "First Three Colours",
+        inputColours: 3,
+        samples:[
+            [[1,1,1], [0,1,1]], 
+            [[1,1,1], [1,2,1]],
+            [[1,1,1], [1,1,0]], 
+            [[0,0,0], [1,0,0]],
+            [[0,0,0], [0,2,0]], 
+            [[0,0,0], [0,0,1]],
+            [[2,2,2], [1,2,2]],
+            [[2,2,2], [2,0,2]], 
+            [[2,2,2], [2,2,1]],
+        ]
+    }
+}
+
 export const settingsStore = defineStore('settings', {
     state: () => ({
         size: { x: 2, y: 3 },
@@ -66,6 +96,9 @@ export const settingsStore = defineStore('settings', {
         },
         getDarkMode: (state) => {
             return state.darkMode
+        },
+        getChallenges: () => {
+            return challenges
         }
 
     },

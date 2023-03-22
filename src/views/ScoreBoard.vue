@@ -8,7 +8,7 @@
   <v-card-text>
     <v-window v-model="tabGameType">
       <v-window-item v-for="b in this.boards" :value="b.id" v-bind:key="b">
-        <v-card v-if="b.id === 'oneOfEach'">
+        <v-card v-if="b.id === 'oneOfEach' || b.id === 'challenge'">
           <v-tabs
             class="tabsClass"
             v-model="tabLevel"

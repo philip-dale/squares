@@ -111,6 +111,10 @@ export const samplesStore = defineStore('samples', {
         },
         canSpawn: () => {
             return (containerType) => {
+                let gameState = gameStateStore()
+                if(gameState.getGameType === "challenge") {
+                    return false
+                }
                 switch (containerType) {
                     case "spawn":
                         return true
@@ -280,10 +284,12 @@ export const samplesStore = defineStore('samples', {
                     gameState.addCompletedSample(pureVal)
                     this.removeSelected();
                 } else {
-                    this.allSamples[this.selected.parentId][this.selected.uid].selected = false
-                    this.selected.parentId = -1
-                    this.selected.uid = -1
-                    return "Not Single Colour"
+                    if(this.selected.parentId != -1) {
+                        this.allSamples[this.selected.parentId][this.selected.uid].selected = false
+                        this.selected.parentId = -1
+                        this.selected.uid = -1
+                        return "Not Single Colour"
+                    }
                 }
             } else if (this.hasSpace(newContainerId)) {
                 // console.log("Has Space", this.selected.parentId, this.selected.uid)

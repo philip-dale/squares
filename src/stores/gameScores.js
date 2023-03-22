@@ -213,7 +213,69 @@ const defaultScoreBoards = {
         { "name": "", "time": 10009 },
         { "name": "", "time": 10010 }]
     },
+    {
+        "id": "17", "scores": [{ "name": "", "time": 10001 },
+        { "name": "", "time": 10002 },
+        { "name": "", "time": 10003 },
+        { "name": "", "time": 10004 },
+        { "name": "", "time": 10005 },
+        { "name": "", "time": 10006 },
+        { "name": "", "time": 10007 },
+        { "name": "", "time": 10008 },
+        { "name": "", "time": 10009 },
+        { "name": "", "time": 10010 }]
+    },
+    {
+        "id": "18", "scores": [{ "name": "", "time": 10001 },
+        { "name": "", "time": 10002 },
+        { "name": "", "time": 10003 },
+        { "name": "", "time": 10004 },
+        { "name": "", "time": 10005 },
+        { "name": "", "time": 10006 },
+        { "name": "", "time": 10007 },
+        { "name": "", "time": 10008 },
+        { "name": "", "time": 10009 },
+        { "name": "", "time": 10010 }]
+    },
+    {
+        "id": "19", "scores": [{ "name": "", "time": 10001 },
+        { "name": "", "time": 10002 },
+        { "name": "", "time": 10003 },
+        { "name": "", "time": 10004 },
+        { "name": "", "time": 10005 },
+        { "name": "", "time": 10006 },
+        { "name": "", "time": 10007 },
+        { "name": "", "time": 10008 },
+        { "name": "", "time": 10009 },
+        { "name": "", "time": 10010 }]
+    },
     ],
+    "challenge": [
+    {
+        "id": "1", "scores": [{ "name": "", "time": 10001 },
+        { "name": "", "time": 10002 },
+        { "name": "", "time": 10003 },
+        { "name": "", "time": 10004 },
+        { "name": "", "time": 10005 },
+        { "name": "", "time": 10006 },
+        { "name": "", "time": 10007 },
+        { "name": "", "time": 10008 },
+        { "name": "", "time": 10009 },
+        { "name": "", "time": 10010 }]
+    },
+    {
+        "id": "2", "scores": [{ "name": "", "time": 10001 },
+        { "name": "", "time": 10002 },
+        { "name": "", "time": 10003 },
+        { "name": "", "time": 10004 },
+        { "name": "", "time": 10005 },
+        { "name": "", "time": 10006 },
+        { "name": "", "time": 10007 },
+        { "name": "", "time": 10008 },
+        { "name": "", "time": 10009 },
+        { "name": "", "time": 10010 }]
+    },
+    ]
 }
 
 export const scoreBoardStore = defineStore('scoreBoards', {
@@ -231,7 +293,26 @@ export const scoreBoardStore = defineStore('scoreBoards', {
 
             if(scoresState != null){
                 if("scoreBoards" in scoresState) {
-                    this.scoreBoards = scoresState.scoreBoards
+                    if("standard" in scoresState.scoreBoards) {
+                        this.scoreBoards["standard"] = scoresState.scoreBoards["standard"]
+                    }
+                    if("continuous" in scoresState.scoreBoards) {
+                        this.scoreBoards["continuous"] = scoresState.scoreBoards["continuous"]
+                    }
+                    if("oneOfEach" in scoresState.scoreBoards) {
+                        for (const key of Object.keys(this.scoreBoards["oneOfEach"])) {
+                            if(key in scoresState.scoreBoards["oneOfEach"]) {
+                                this.scoreBoards["oneOfEach"]["key"] = scoresState.scoreBoards["oneOfEach"]["key"]
+                            }
+                        }
+                    }
+                    if("challenge" in scoresState.scoreBoards) {
+                        for (const key of Object.keys(this.scoreBoards["challenge"])) {
+                            if(key in scoresState.scoreBoards["challenge"]) {
+                                this.scoreBoards["challenge"]["key"] = scoresState.scoreBoards["challenge"]["key"]
+                            }
+                        }
+                    }
                 }
             }
 
@@ -254,6 +335,10 @@ export const scoreBoardStore = defineStore('scoreBoards', {
             for(let i=0; i<this.scoreBoards["oneOfEach"].length; i++) {
                 this.scoreBoards["oneOfEach"][i].scores.sort(function (a, b) { return a.time - b.time })
             }
+
+            for(let i=0; i<this.scoreBoards["challenge"].length; i++) {
+                this.scoreBoards["challenge"][i].scores.sort(function (a, b) { return a.time - b.time })
+            }
         },
         setLocalStorage() {
             var obj = new Object();
@@ -265,7 +350,7 @@ export const scoreBoardStore = defineStore('scoreBoards', {
             localStorage.clear("scores_state")
         },
         addScore(gameType, score, time, level) {
-            if (gameType === "oneOfEach") {
+            if (gameType === "oneOfEach" || gameType === "challenge") {
                 this.scoreBoards[gameType][level - 1].scores.push({ "name": "", "time": time })
                 this.scoreBoards[gameType][level - 1].scores.sort(function (a, b) { return a.time - b.time })
                 if (this.scoreBoards[gameType][level - 1].scores.length > 10) {

@@ -162,8 +162,21 @@ export const samplesStore = defineStore('samples', {
             for (const key of Object.keys(this.allSamples)) {
                 this.allSamples[key] = {}
             }
-            this.count = 0,
-                this.selected = { 'parentId': -1, "uid": -1 }
+            this.count = 0
+            this.selected = { 'parentId': -1, "uid": -1 }
+
+            const gameState = gameStateStore()
+            const settings = settingsStore()
+            if(gameState.gameType === "challenge") {
+                this.allSamples["1"] = {}
+                let samples = settings.getChallenges[gameState.getChallenge].samples
+
+                for(let i=0; i<samples.length; i++) {
+                    this.allSamples["1"][this.count.toString()] = createPart(samples[i], "1", this.count.toString(), this.count)
+                    this.count++
+                }
+            }
+
             this.setLocalStorage()
         },
         setLocalStorage() {

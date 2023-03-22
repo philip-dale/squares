@@ -17,6 +17,13 @@
       :color="darkMode ? 'grey-darken-2': 'gray'"
       :disabled="this.disableLevelSelect"
     ></v-select>
+    <v-select
+      label="Select Challenge"
+      :items="challenges"
+      v-model="challenge"
+      :color="darkMode ? 'grey-darken-2': 'gray'"
+      :disabled="this.gameType != 'challenge'"
+    ></v-select>
     <v-checkbox-btn v-model="darkMode">Dark Mode</v-checkbox-btn>
   </div>
   <OkCancelDialog title="Restart Game" message="All progress will be cleared if you restart the game" 
@@ -33,6 +40,11 @@
                    okText="Change Level" :showDialog="this.changeLevelDialogState" 
                    @okBtn="{this.changeLevelDialogState = false; changeLevel()}"
                    @cancelBtn="this.changeLevelDialogState = false"
+                   />
+  <OkCancelDialog title="Change Challenge" message="All progress will be cleared if you change the Challenge" 
+                   okText="Change Challenge" :showDialog="this.changeChallengeDialogState" 
+                   @okBtn="{this.changeChallengeDialogState = false; changeChallenge()}"
+                   @cancelBtn="this.changeChallengeDialogState = false"
                    />
 </template>
 
@@ -52,8 +64,10 @@ export default {
     restartDialogState: false,
     changeGameDialogState: false,
     changeLevelDialogState: false,
+    changeChallengeDialogState: false,
     requestedGameType: null,
     requestedLevel: null,
+    requestedChallenge: null
   }),
   setup() {
     const samples = samplesStore();
@@ -68,11 +82,8 @@ export default {
       },
       set(val) {
         this.requestedLevel = val
-       this.changeLevelDialogState = true
-      },
-      darkMode() {
-        return this.settings.getDarkMode;
-      },
+        this.changeLevelDialogState = true
+      }
     },
     gameType: {
       get() {
@@ -99,6 +110,18 @@ export default {
         return false
       }
       return true
+    },
+    challenges() {
+      return Object.keys(this.settings.getChallenges).map((key) => ({title:key + ": " + this.settings.getChallenges[key].name, value:key}))
+    },
+    challenge: {
+      get() {
+        return this.gameState.getChallenge
+      },
+      set(val) {
+        this.requestedChallenge = val
+        this.changeChallengeDialogState = true
+      }
     }
   },
   methods: {
@@ -110,12 +133,16 @@ export default {
       this.samples.reset();
     },
     changeMode() {
-      this.restartGame()
       this.gameState.setGameType(this.requestedGameType);
+      this.restartGame()
     },
     changeLevel() {
-      this.restartGame()
       this.gameState.setLevel(this.requestedLevel);
+      this.restartGame()
+    },
+    changeChallenge() {
+      this.gameState.setChallenge(this.requestedChallenge)
+      this.restartGame()
     }
   },
 };

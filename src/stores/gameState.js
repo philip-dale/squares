@@ -3,9 +3,10 @@ import { settingsStore } from './settings'
 import { scoreBoardStore} from './gameScores'
 
 const gameTypes = {
-    "standard":{"name": "Standard", "autoSpawn":false, "autoIncreaseLevel": true, "oneOfEach":false}, 
-    "continuous":{"name": "Continuous", "autoSpawn":true, "autoIncreaseLevel": true, "oneOfEach":false}, 
-    "oneOfEach":{"name": "One Of Each", "autoSpawn":false, "autoIncreaseLevel": false, "oneOfEach":true}
+    "standard":{"name": "Standard", "autoSpawn":false, "autoIncreaseLevel": true, "oneOfEach":false, "manualSpawn":true}, 
+    "continuous":{"name": "Continuous", "autoSpawn":true, "autoIncreaseLevel": true, "oneOfEach":false, "manualSpawn":true}, 
+    "oneOfEach":{"name": "One Of Each", "autoSpawn":false, "autoIncreaseLevel": false, "oneOfEach":true, "manualSpawn":true},
+    "challenge":{"name": "Challenge", "autoSpawn":false, "autoIncreaseLevel": false, "oneOfEach":true, "manualSpawn":false}
 }
 
 const playtimeIncrement = 100
@@ -20,6 +21,7 @@ export const gameStateStore = defineStore('gameState', {
         gamePaused: true,
         playTime: 0,
         gameOver: false,
+        challenge: "1",
     }),
     getters: {
         getSamplesCompleted: (state) => {
@@ -64,6 +66,9 @@ export const gameStateStore = defineStore('gameState', {
         },
         getinputColours: (state) => {
             const settings = settingsStore()
+            if(state.gameType === "challenge") {
+                return settings.getChallenges[state.challenge].inputColours
+            }
             return settings.getGameLevels[state.gameLevel].inputColours
         },
         getGameTypes: () => {
@@ -77,6 +82,9 @@ export const gameStateStore = defineStore('gameState', {
         },
         isGameOver: (state) => {
             return state.gameOver
+        },
+        getChallenge: (state) => {
+            return state.challenge
         }
 
     },
@@ -100,6 +108,10 @@ export const gameStateStore = defineStore('gameState', {
 
                 if("gameOver" in gameState) {
                     this.gameOver = gameState.gameOver
+                }
+                
+                if("challenge" in gameState) {
+                    this.challenge = gameState.challenge
                 }
                 
                 setInterval(
@@ -162,6 +174,7 @@ export const gameStateStore = defineStore('gameState', {
             obj.gameLevel = this.gameLevel
             obj.playTime = this.playTime
             obj.gameOver = this.gameOver
+            obj.challenge = this.challenge
             
             localStorage.setItem("game_state", JSON.stringify(obj))
         },
@@ -182,7 +195,7 @@ export const gameStateStore = defineStore('gameState', {
                 this.clearCompletedAtLevel()
             }
 
-            if(this.gameType === "oneOfEach"){
+            if(this.gameType === "oneOfEach" || this.gameType === "challenge"){
                 let oneOfEach = true;
                 for(let i=0; i<this.getinputColours; i++) {
                     if(this.samplesCompletedAtLevel[i.toString()] === 0) {
@@ -192,7 +205,12 @@ export const gameStateStore = defineStore('gameState', {
                 }
                 if(oneOfEach) {
                     const board = scoreBoardStore()
-                    board.addScore(this.getGameType, -1, this.playTime, this.gameLevel)
+                    if(this.gameType === "oneOfEach") {
+                        board.addScore(this.getGameType, -1, this.playTime, this.gameLevel)
+                    }
+                    if(this.gameType === "challenge") {
+                        board.addScore(this.getGameType, -1, this.playTime, this.challenge)
+                    }
                     this.gameOver = true
                 }
             }
@@ -238,6 +256,9 @@ export const gameStateStore = defineStore('gameState', {
         },
         setGamePaused(val) {
             this.gamePaused = val
+        },
+        setChallenge(val) {
+            this.challenge = val
         }
     },
 })

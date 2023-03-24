@@ -75,11 +75,18 @@ export default {
     },
     showWelcome() {
       return (this.welcomeScreenState && this.settings.getShowWelcome)
+    },
+    welcomeScreenState: {
+      get() {
+        return this.settings.getWelcomeScreenState
+      },
+      set(val) {
+        this.settings.setWelcomeScreenState(val)
+      }
     }
   },
   data: () => ({
     drawer: false,
-    welcomeScreenState: true,
   }),
 };
 </script>

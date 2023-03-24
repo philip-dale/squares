@@ -44,6 +44,7 @@ import SampleContainer from "@/components/SampleContainer.vue";
 import SampleMerger from "@/components/SampleMerger.vue";
 import { gameStateStore } from "../stores/gameState"
 import { samplesStore } from "../stores/samplesStore";
+import { settingsStore } from "../stores/settings";
 
 export default {
   name: "GameView",
@@ -54,9 +55,10 @@ export default {
   setup() {
     const gameState = gameStateStore();
     const samples = samplesStore();
+    const settings = settingsStore();
     window.addEventListener('blur', () => {gameState.setGamePaused(true); gameState.setLocalStorage(); });
     window.addEventListener('onbeforeunload', () => {gameState.setLocalStorage()})
-    return {gameState, samples};
+    return {gameState, samples, settings};
   },
   created() {
     this.gameState.setGamePaused(true)
@@ -67,7 +69,13 @@ export default {
   computed: {
     gamePausedDialog: {
       get() {
-        return this.gameState.getGamePaused
+        if(this.gameState.getGamePaused) {
+          if(this.settings.getWelcomeScreenState && this.settings.getShowWelcome) {
+            return false
+          }
+          return true
+        }
+        return false
       },
       set(val) {
         this.gameState.setGamePaused(val)

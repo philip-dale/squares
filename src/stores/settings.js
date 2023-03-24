@@ -64,6 +64,7 @@ export const settingsStore = defineStore('settings', {
         sinkMax: -1,
         darkMode: false,
         showWelcome: true,
+        welcomeScreenState: true,
     }),
     getters: {
         getSize: (state) => {
@@ -103,6 +104,9 @@ export const settingsStore = defineStore('settings', {
         },
         getShowWelcome: (state) => {
             return state.showWelcome
+        },
+        getWelcomeScreenState: (state) => {
+            return state.welcomeScreenState
         }
 
     },
@@ -118,9 +122,6 @@ export const settingsStore = defineStore('settings', {
                 if("darkMode" in settingsState) {
                     this.setDarkMode(settingsState.darkMode)
                 }
-
-                
-                
             }
         },
         setLocalStorage() {
@@ -145,6 +146,9 @@ export const settingsStore = defineStore('settings', {
         setShowWelcome(val) {
             this.showWelcome = val
             this.setLocalStorage()
+        },
+        setWelcomeScreenState(val) {
+            this.welcomeScreenState = val
         }
     }
 })

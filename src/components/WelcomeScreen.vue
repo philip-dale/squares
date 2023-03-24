@@ -3,6 +3,7 @@
     <div class="dialogWrapper">
       <div class="dialogContent">
         <div class="dialogTitle">Welcome To Squares Game</div>
+        <p class="instructionText">This game is currently in Beta release and may have bugs. New features will be released as and when.</p>
         <p class="instructionText">The purpose of the game is to create squares of a single colour by merging other squares together.</p>
         <p class="instructionText">In Standard mode double click/tap the top box to create new samples.</p>
         <p class="instructionText">Drag them to one of the 3 mergers in the middle on the left. When you have 3 or more in there double tap and a new square will appear on the right. Squares are made of Cells. If there is more of one colour contributing to the Cell than any other, it will be the colour of the new Cell. If there are more than one colour that are equal largest, then one is picked at random.</p>

@@ -291,6 +291,13 @@ export const samplesStore = defineStore('samples', {
                         return "Not Single Colour"
                     }
                 }
+            } else if (pureVal != -1) {
+                if(this.selected.parentId != -1) {
+                    this.allSamples[this.selected.parentId][this.selected.uid].selected = false
+                    this.selected.parentId = -1
+                    this.selected.uid = -1
+                }
+                return "Single Colour Squares cannot be reused"
             } else if (this.hasSpace(newContainerId)) {
                 // console.log("Has Space", this.selected.parentId, this.selected.uid)
                 this.moveSelected(newContainerId)

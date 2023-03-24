@@ -45,9 +45,6 @@ export default {
       get() {
         return this.showDialog;
       },
-      darkMode() {
-        return this.settings.getDarkMode;
-      },
     },
   }
 };

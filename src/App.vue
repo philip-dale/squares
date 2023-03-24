@@ -20,6 +20,7 @@
     <div class="mainview">
       <router-view />
     </div>
+    <welcomeDialog :showDialog="this.showWelcome" @playBtn="this.welcomeScreenState = false"></welcomeDialog>
   </v-app>
   <v-layout class="drawLayout" :color="darkMode ? 'grey-darken-2': 'gray'">
     <v-navigation-drawer v-model="drawer" temporary :color="darkMode ? 'grey-darken-2': 'gray'">
@@ -45,6 +46,8 @@ import { scoreBoardStore } from "./stores/gameScores";
 import { settingsStore } from "./stores/settings";
 import { samplesStore } from "./stores/samplesStore";
 
+import welcomeDialog from "@/components/WelcomeScreen.vue";
+
 export default {
   setup() {
     const gameState = gameStateStore();
@@ -55,7 +58,10 @@ export default {
     gameScores.init();
     settings.init();
     samples.init();
-    return { gameState, settings };
+    return { gameState, settings};
+  },
+  components: {
+    welcomeDialog
   },
   computed: {
     darkMode() {
@@ -66,6 +72,17 @@ export default {
         return ", Challenge = " + this.gameState.getChallenge.toString()
       } 
       return ", Level = " + this.gameState.getGameLevel.toString()
+    },
+    showWelcome() {
+      return (this.welcomeScreenState && this.settings.getShowWelcome)
+    },
+    welcomeScreenState: {
+      get() {
+        return this.settings.getWelcomeScreenState
+      },
+      set(val) {
+        this.settings.setWelcomeScreenState(val)
+      }
     }
   },
   data: () => ({

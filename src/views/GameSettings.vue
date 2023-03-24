@@ -24,7 +24,8 @@
       :color="darkMode ? 'grey-darken-2': 'gray'"
       :disabled="this.gameType != 'challenge'"
     ></v-select>
-    <v-checkbox-btn v-model="darkMode">Dark Mode</v-checkbox-btn>
+    <v-checkbox-btn v-model="darkMode" label="Dark Mode"></v-checkbox-btn>
+    <v-checkbox-btn v-model="showWelcome" label="Show Welcome Screen" ></v-checkbox-btn>
   </div>
   <OkCancelDialog title="Restart Game" message="All progress will be cleared if you restart the game" 
                    okText="Restart Game" :showDialog="this.restartDialogState" 
@@ -100,6 +101,14 @@ export default {
       },
       set(val) {
         this.settings.setDarkMode(val)
+      }
+    },
+    showWelcome: {
+      get() {
+        return this.settings.getShowWelcome
+      },
+      set(val) {
+        this.settings.setShowWelcome(val)
       }
     },
     gameTypes() {

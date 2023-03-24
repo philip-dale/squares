@@ -63,6 +63,8 @@ export const settingsStore = defineStore('settings', {
         mergeOutMax: 1,
         sinkMax: -1,
         darkMode: false,
+        showWelcome: true,
+        welcomeScreenState: true,
     }),
     getters: {
         getSize: (state) => {
@@ -99,12 +101,22 @@ export const settingsStore = defineStore('settings', {
         },
         getChallenges: () => {
             return challenges
+        },
+        getShowWelcome: (state) => {
+            return state.showWelcome
+        },
+        getWelcomeScreenState: (state) => {
+            return state.welcomeScreenState
         }
 
     },
     actions: {
         init() {
             let settingsState = JSON.parse(localStorage.getItem("settings_state"))
+
+            if("showWelcome" in settingsState) {
+                this.showWelcome = settingsState.showWelcome
+            }
 
             if(settingsState != null){
                 if("darkMode" in settingsState) {
@@ -115,6 +127,7 @@ export const settingsStore = defineStore('settings', {
         setLocalStorage() {
             var obj = new Object();
             obj.darkMode = this.darkMode
+            obj.showWelcome = this.showWelcome
 
             localStorage.setItem("settings_state", JSON.stringify(obj))
         },
@@ -129,6 +142,13 @@ export const settingsStore = defineStore('settings', {
             }
             this.darkMode = val;
             this.setLocalStorage()
+        },
+        setShowWelcome(val) {
+            this.showWelcome = val
+            this.setLocalStorage()
+        },
+        setWelcomeScreenState(val) {
+            this.welcomeScreenState = val
         }
     }
 })

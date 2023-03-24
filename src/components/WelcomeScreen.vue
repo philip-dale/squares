@@ -1,57 +1,53 @@
 <template>
-  <GDialog v-model="showDialogState" width="350px" persistent local>
+  <GDialog v-model="showDialogState" width="350px" persistent local style="z-index: 999999;">
     <div class="dialogWrapper">
       <div class="dialogContent">
-        <div class="dialogTitle">{{ this.title }}</div>
-        {{ this.message }}
+        <div class="dialogTitle">Welcome To Squares Game</div>
+        <p class="instructionText">fhdsfhafoihdsafiuhafauipofhdaofiuhgdafaiuhfv dhfadoifha Dfhoiafhpo dfhafoafhoahdfosaihfdsaof</p>
       </div>
       <div class="dialogActions">
-        <v-btn class="dialogBtn" @click="$emit('okBtn')">{{ this.okText }}</v-btn>
-        <v-btn class="dialogBtn" @click="$emit('cancelBtn')">Cancel</v-btn>
+        <v-btn class="dialogBtn" @click="$emit('playBtn')">Play</v-btn>
+        <v-checkbox-btn v-model="showWelcome" label="Show Welcome Screen"></v-checkbox-btn>
       </div>
     </div>
   </GDialog>
 </template>
-      
+        
 <script>
 import { settingsStore } from "../stores/settings";
 
 export default {
-  name: "OkCancelDialog",
+  name: "WelcomeScreen",
+  setup() {
+    const settings = settingsStore();
+    return { settings };
+  },
   props: {
-    title: {
-        type: String,
-        default: "title"
-    },
-    message: {
-        type: String,
-        default: "message"
-    },
-    okText: {
-        type: String,
-        default: "Ok"
-    },
     showDialog: {
         type: Boolean,
         default: false
     },
   },
-  setup() {
-    const settings = settingsStore();
-    return { settings };
-  },
-  computed:{
+  computed: {
+    showWelcome: {
+      get() {
+        return this.settings.getShowWelcome
+      },
+      set(val) {
+        this.settings.setShowWelcome(val)
+      }
+    },
     showDialogState: {
       get() {
         return this.showDialog;
       },
     },
-  }
+  },
 };
 </script>
-
-
-<style scoped>
+  
+  
+  <style scoped>
 .dialogWrapper {
   color: var(--primary-colour);
   background: var(--primary-background-colour);
@@ -77,5 +73,10 @@ export default {
 .dialogBtn {
   background-color: var(--btn-color-bg);
   color: var(--primary-colour);
+}
+
+.instructionText {
+  text-align: left;
+  margin: 3px;
 }
 </style>

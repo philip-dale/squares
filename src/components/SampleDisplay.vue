@@ -1,14 +1,17 @@
 <template>
-  <div class="sampleDisplay" v-bind:class="{'sampleDisplayStandard': !selected, 'sampleDisplaySelected': selected}" @click.stop='click()'>
-    <div v-for="y in this.settings.getSize.y" v-bind:key="y" class="displayRow">
-      <div
-        v-for="x in this.settings.getSize.x"
-        v-bind:key="x"
-        class="displayCell"
-      >
-        <PartDisplay v-if="ghostId === -1" :partId="this.samples.sample(this.parent, this.uid).parts[x - 1][y - 1]" :opacity="this.opacity"/>
-        <PartDisplay v-else :partId="ghostId" :opacity="this.opacity"/>
+  <div>
+    <div class="totalCount" v-if="ghostId != -1">{{ this.gameState.getSamplesCompleted[ghostId] }}</div>
+    <div class="sampleDisplay" v-bind:class="{'sampleDisplayStandard': !selected, 'sampleDisplaySelected': selected}" @click.stop='click()'>
+      <div v-for="y in this.settings.getSize.y" v-bind:key="y" class="displayRow">
+        <div
+          v-for="x in this.settings.getSize.x"
+          v-bind:key="x"
+          class="displayCell"
+        >
+          <PartDisplay v-if="ghostId === -1" :partId="this.samples.sample(this.parent, this.uid).parts[x - 1][y - 1]" :opacity="this.opacity"/>
+          <PartDisplay v-else :partId="ghostId" :opacity="this.opacity"/>
 
+        </div>
       </div>
     </div>
   </div>
@@ -98,5 +101,9 @@ export default {
 
 .displayCell {
   flex-grow: 1
+}
+
+.totalCount {
+  padding-top: 7px;
 }
 </style>

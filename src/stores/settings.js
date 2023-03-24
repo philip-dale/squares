@@ -113,12 +113,11 @@ export const settingsStore = defineStore('settings', {
     actions: {
         init() {
             let settingsState = JSON.parse(localStorage.getItem("settings_state"))
-
-            if("showWelcome" in settingsState) {
-                this.showWelcome = settingsState.showWelcome
-            }
-
             if(settingsState != null){
+                if("showWelcome" in settingsState) {
+                    this.showWelcome = settingsState.showWelcome
+                }
+
                 if("darkMode" in settingsState) {
                     this.setDarkMode(settingsState.darkMode)
                 }

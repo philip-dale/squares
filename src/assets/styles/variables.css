@@ -11,6 +11,7 @@
     --part-separator-width: 1px;
     --btn-color-bg: rgb(238, 238, 238);
     --html-background-colour: white;
+    --life-bar-colour: #832dd4;
   }
 
   [data-theme="dark"] {
@@ -20,4 +21,5 @@
     --part-separator-colour: rgb(248, 246, 246);
     --btn-color-bg: #616161;
     --html-background-colour: black;
+    --life-bar-colour: #a87412;
   }

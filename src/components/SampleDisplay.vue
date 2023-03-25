@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="totalCount" v-if="ghostId != -1">{{ this.gameState.getSamplesCompleted[ghostId] }}</div>
+    <div class="totalCount" v-if="ghostId != -1">{{ this.totalCount }}</div>
     <div class="outerDiv" v-bind:class="{'sampleDisplayStandard': !selected, 'sampleDisplaySelected': selected}">
       <div class="overlay" :style="this.overlayVisible"></div>
       <div class="left" :style="this.leftVisible"></div>
@@ -88,6 +88,12 @@ export default {
         return "visibility: visible;"
       }
       return "visibility: hidden;"
+    },
+    totalCount() {
+      if (this.gameState.getSamplesCompleted[this.ghostId] == null) {
+        return 0
+      }
+      return this.gameState.getSamplesCompleted[this.ghostId]
     }
   },
   methods: {
@@ -112,9 +118,6 @@ export default {
   width: 3em;
   height: 3em;
   position: relative;
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
 }
 
 .overlay {
@@ -136,9 +139,6 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  /* border: 10px solid gray;
-  border-radius: 100px 0px 0px 100px;
-  border-right: 0; */
 }
 
 .right {
@@ -148,12 +148,7 @@ export default {
   position: absolute;
   top: -50%;
   left: -50%;
-  /* border: 10px solid gray;
-  border-radius: 100px 0px 0px 100px;
-  border-right: 0; */
   transform-origin: right;
-  /* transform: rotate(140deg); */
-  
 }
 
 .sampleDisplay {

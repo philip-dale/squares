@@ -325,19 +325,19 @@ export const samplesStore = defineStore('samples', {
         },
         merge(containerId, destId) {
             const settings = settingsStore()
+            const inputs = Object.keys(this.allSamples[containerId]).length
             if (Object.keys(this.allSamples[destId]).length < this.storeCapacity[destId]) {
-                if (Object.keys(this.allSamples[containerId]).length >= settings.getMergeInMin) {
+                if ( inputs >= settings.getMergeInMin) {
 
                     let samplesParts = new Array(Object.keys(this.allSamples[containerId]).length);
 
                     let i = 0
                     for (const [key, value] of Object.entries(this.allSamples[containerId])) {
                         samplesParts[i] = value.parts
-                        this.allSamples[containerId][key].lives--
-                        if (this.allSamples[containerId][key].lives < 1) {
+                        this.allSamples[containerId][key].lives -= settings.getMaxLives / inputs
+                        if (this.allSamples[containerId][key].lives < 0.1) {
                             delete this.allSamples[containerId][key]
                         }
-
                         i++
                     }
                     let newSample = mergeSample(samplesParts)

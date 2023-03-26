@@ -85,6 +85,9 @@ export const gameStateStore = defineStore('gameState', {
         },
         getChallenge: (state) => {
             return state.challenge
+        },
+        getPlayTime: (state) => {
+            return state.playTime / 100
         }
 
     },

@@ -30,7 +30,9 @@
     <div class="dialogWrapper">
       <div class="dialogContent">
         <div class="dialogTitle">Game Over</div>
-        Game Over, would you like to play again?
+          <p>Game Over</p>
+          <p>Your score is {{ this.gameState.getTotalCompleted }} in {{ this.gameState.getPlayTime }} seconds</p>
+          <p>Would you like to play again?</p>
       </div>
       <div class="dialogActions">
         <v-btn class="dialogBtn" @click="this.gameState.reset(); this.samples.reset();">Play Again</v-btn>

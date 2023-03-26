@@ -126,7 +126,7 @@ export const scoreBoardStore = defineStore('scoreBoards', {
         },
         setLocalStorage() {
             var obj = new Object();
-            // obj.version = 2
+            obj.version = 2
             obj.scoreBoards = this.scoreBoards
 
             localStorage.setItem("scores_state", JSON.stringify(obj))

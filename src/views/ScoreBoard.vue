@@ -26,7 +26,7 @@
                     <th>Time</th>
                   </tr>
                   <tr v-for="s in l.scores" v-bind:key="s">
-                    <td>{{ s.time/100 }}s</td>
+                    <td>{{ s.time/10 }}s</td>
                   </tr>
                 </table>
               </v-window-item>
@@ -41,7 +41,7 @@
             </tr>
             <tr v-for="s in b.values" v-bind:key="s">
               <td>{{ s.score }}</td>
-              <td>{{ s.time/100 }}s</td>
+              <td>{{ s.time/10 }}s</td>
             </tr>
           </table>
         </v-card>

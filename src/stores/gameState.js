@@ -87,7 +87,7 @@ export const gameStateStore = defineStore('gameState', {
             return state.challenge
         },
         getPlayTime: (state) => {
-            return state.playTime / 100
+            return state.playTime / 10
         }
 
     },
@@ -119,7 +119,7 @@ export const gameStateStore = defineStore('gameState', {
                 
                 setInterval(
                     () => {
-                        if(!this.gamePaused) {
+                        if(!this.gamePaused && !this.gameOver) {
                             this.playTime++;
                         }
                     }, 
@@ -156,7 +156,7 @@ export const gameStateStore = defineStore('gameState', {
             this.playTime = 0
             setInterval(
                 () => {
-                    if(!this.gamePaused) {
+                    if(!this.gamePaused && !this.gamePaused) {
                         this.playTime++;
                     }
                 }, 
@@ -231,7 +231,7 @@ export const gameStateStore = defineStore('gameState', {
             clearTimeout(this.spawnTimer)
             this.spawnTimer = setInterval(
                 () => {
-                    if(this.getAutoSpawn && !this.gamePaused) {
+                    if(this.getAutoSpawn && !this.gamePaused && !this.gamePaused) {
                         func();
                     }
                 }, 

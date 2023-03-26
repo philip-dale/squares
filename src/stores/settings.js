@@ -125,6 +125,7 @@ export const settingsStore = defineStore('settings', {
         },
         setLocalStorage() {
             var obj = new Object();
+            obj.version = 1
             obj.darkMode = this.darkMode
             obj.showWelcome = this.showWelcome
 

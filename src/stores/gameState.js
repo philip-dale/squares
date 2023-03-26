@@ -168,6 +168,7 @@ export const gameStateStore = defineStore('gameState', {
         },
         setLocalStorage() {
             var obj = new Object();
+            obj.version = 1
             obj.samplesCompleted = this.samplesCompleted
             obj.samplesCompletedAtLevel = this.samplesCompletedAtLevel
             obj.gameType = this.gameType

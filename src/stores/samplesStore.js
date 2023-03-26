@@ -185,6 +185,7 @@ export const samplesStore = defineStore('samples', {
         },
         setLocalStorage() {
             var obj = new Object();
+            obj.version = 1
             obj.allSamples = this.allSamples
             obj.count = this.count
             obj.storeCapacity = this.storeCapacity

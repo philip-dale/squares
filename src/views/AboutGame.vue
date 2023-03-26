@@ -61,7 +61,7 @@
           <p class="instructionHeading">Continuous</p>
           <p class="instructionText">This is the same as standard, but new Samples will automatically appear!</p>
           <p class="instructionHeading">One Of Each</p>
-          <p class="instructionText">For the selected level, try to create one of each colour as fast as possible</p>
+          <p class="instructionText">For the selected level, try to create one of each colour as fast as possible. To select a level go to settings and use the options there.</p>
           <p class="instructionHeading">Challenge</p>
           <p class="instructionText">Series of different challenges. Try to create one of each colour as fast as possible, but you cannot create more so use what you have carfully</p>
         </v-window-item>

@@ -22,6 +22,7 @@ export const gameStateStore = defineStore('gameState', {
         playTime: 0,
         gameOver: false,
         challenge: "1",
+        timerId: null,
     }),
     getters: {
         getSamplesCompleted: (state) => {
@@ -116,9 +117,8 @@ export const gameStateStore = defineStore('gameState', {
                 if("challenge" in gameState) {
                     this.challenge = gameState.challenge
                 }
-                
-                setInterval(
-                    () => {
+                clearInterval(this.timerId)
+                this.timerId = setInterval( () => {
                         if(!this.gamePaused && !this.gameOver) {
                             this.playTime++;
                         }
@@ -154,9 +154,9 @@ export const gameStateStore = defineStore('gameState', {
                 this.samplesCompletedAtLevel[i.toString()] = 0
             }
             this.playTime = 0
-            setInterval(
-                () => {
-                    if(!this.gamePaused && !this.gamePaused) {
+            clearInterval(this.timerId)
+            this.timerId = setInterval(() => {
+                    if(!this.gamePaused && !this.gameOver) {
                         this.playTime++;
                     }
                 }, 

@@ -4,7 +4,7 @@
             <SampleContainer :id="id  + '_' + '1'" containerType="merge-in" :pairId="id + '_' + '2'"/>
         </div>
         <div class="merger-output">
-            <SampleContainer :id="id + '_' + '2'" containerType="merge-out"/>
+            <SampleContainer :id="id + '_' + '2'" containerType="merge-out" :pairId="id + '_' + '1'"/>
         </div>
     </div>
 </template>

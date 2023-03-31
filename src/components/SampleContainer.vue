@@ -191,6 +191,15 @@ export default {
             this.snackbar = true;
           }
           return;
+        case "merge-out":
+          if(!this.samples.removeContainerCompleted(this.id)) {
+            ret = this.samples.merge(this.pairId, this.id);
+            if (ret != null) {
+              this.snackMessage = ret;
+              this.snackbar = true;
+            }
+          }
+          return
       }
     },
     startDrag(evt) {
@@ -220,8 +229,11 @@ export default {
           this.snackbar = true;
         }
       } else {
-        this.snackMessage = "Cannot Move here";
-        this.snackbar = true;
+        const selected = this.samples.getSelected()
+        if(selected.parentId != -1) {
+          this.snackMessage = "Cannot Move here";
+          this.snackbar = true;
+        }
       }
     },
     spawn() {

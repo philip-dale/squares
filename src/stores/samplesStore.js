@@ -372,6 +372,19 @@ export const samplesStore = defineStore('samples', {
                     this.allSamples[containerId][itemsArray[i].uid]["containerIndex"] = i;
                 }
             }
+        },
+        removeContainerCompleted(containerId) {
+            let gameState = gameStateStore()
+            let pureFound = false
+            for(const k of Object.keys(this.allSamples[containerId])) {
+                const pureVal = isPureSample(this.allSamples[containerId][k].parts)
+                if(pureVal != -1) {
+                    gameState.addCompletedSample(pureVal)
+                    this.remove(containerId, k)
+                    pureFound = true
+                }
+            }
+            return pureFound
         }
     },
 })

@@ -217,6 +217,7 @@ export default {
           this.snackbar = true;
         }
       }
+      this.samples.clearSelected()
     },
     click() {
       if (this.canMoveTo) {
@@ -226,12 +227,6 @@ export default {
         );
         if (ret != null) {
           this.snackMessage = ret;
-          this.snackbar = true;
-        }
-      } else {
-        const selected = this.samples.getSelected()
-        if(selected.parentId != -1) {
-          this.snackMessage = "Cannot Move here";
           this.snackbar = true;
         }
       }

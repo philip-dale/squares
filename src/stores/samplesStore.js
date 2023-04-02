@@ -375,17 +375,21 @@ export const samplesStore = defineStore('samples', {
         },
         removeContainerCompleted(containerId) {
             this.clearSelected()
-            let gameState = gameStateStore()
             let pureFound = false
             for(const k of Object.keys(this.allSamples[containerId])) {
-                const pureVal = isPureSample(this.allSamples[containerId][k].parts)
-                if(pureVal != -1) {
-                    gameState.addCompletedSample(pureVal)
-                    this.remove(containerId, k)
-                    pureFound = true
-                }
+                pureFound = this.removeContainerCompletedItem(containerId, k)
             }
             return pureFound
+        },
+        removeContainerCompletedItem(containerId, uid) {
+            let gameState = gameStateStore()
+            const pureVal = isPureSample(this.allSamples[containerId][uid].parts)
+            if(pureVal != -1) {
+                gameState.addCompletedSample(pureVal)
+                this.remove(containerId, uid)
+                return true
+            }
+            return false
         },
         clearSelected() {
             if (this.selected.parentId != -1) {

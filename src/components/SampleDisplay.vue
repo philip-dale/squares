@@ -5,16 +5,15 @@
       <div class="overlay" :style="this.overlayVisible"></div>
       <div class="left" :style="this.leftVisible"></div>
       <div class="right" :style="this.lifeRotation"></div>
-      <div class="sampleDisplay" @click.stop='click()'>
+      <div class="sampleDisplay" @click.stop='click()' @dblclick.stop='dbclick()'>
         <div v-for="y in this.settings.getSize.y" v-bind:key="y" class="displayRow">
           <div
             v-for="x in this.settings.getSize.x"
             v-bind:key="x"
             class="displayCell"
           >
-            <PartDisplay v-if="ghostId === -1" :partId="this.samples.sample(this.parent, this.uid).parts[x - 1][y - 1]" :opacity="this.opacity"/>
-            <PartDisplay v-else :partId="ghostId" :opacity="this.opacity"/>
-
+            <PartDisplay v-if="ghostId === -1" :partId="this.samples.sample(this.parent, this.uid).parts[x - 1][y - 1]"/>
+            <PartDisplay v-else :partId="ghostId"/>
           </div>
         </div>
       </div>
@@ -48,18 +47,6 @@ export default {
     return { samples, settings, gameState };
   },
   computed: {
-    opacity() {
-      // if(this.ghostId === -1) {
-      //   return this.samples.sample(this.parent, this.uid).lives / this.settings.getMaxLives
-      // } else {
-      //   if(this.gameState.getSamplesCompleted[this.ghostId.toString()] > 0) {
-      //     return 1
-      //   } else {
-      //     return 0.2
-      //   }
-      // }
-      return 1
-    },
     selected() {
       return this.samples.isSelected(this.parent, this.uid)
     },
@@ -101,7 +88,13 @@ export default {
       if(this.ghostId === -1) {
         this.samples.toggleSelect(this.parent, this.uid)
       }
-    }
+    },
+    dbclick() {
+      if(this.samples.pureVal(this.parent, this.uid) != -1) {
+        this.samples.clearSelected()
+        this.samples.removeContainerCompletedItem(this.parent, this.uid)
+      }
+    },
   }
 };
 </script>

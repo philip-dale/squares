@@ -105,7 +105,7 @@ export default {
 .stores {
   width: 100%;
   padding: 5px;
-  min-height: 280px;
+  min-height: 140px;
 }
 .sinks {
   width: 100%;
@@ -154,10 +154,10 @@ export default {
 <style>
 
 .stores .outerContainer .sampleContainer {
-  min-height: 280px;
+  min-height: 140px;
 }
 
 .stores .outerContainer .sampleContainer .ifContainer{
-  min-height: 280px;
+  min-height: 140px;
 }
 </style>

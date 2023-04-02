@@ -1,5 +1,5 @@
 <template>
-  <div class="partDisplay" v-bind:style="{ background: this.settings.getColour(this.partId), opacity: this.opacity }"></div>
+  <div class="partDisplay" v-bind:style="{ background: this.settings.getColour(this.partId)}"></div>
 </template>
     
   <script>
@@ -9,7 +9,6 @@
     name: "PartDisplay",
     props: {
       partId: Number,
-      opacity: Number,
     },
     setup() {
       const settings = settingsStore();

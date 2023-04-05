@@ -62,7 +62,7 @@ export const settingsStore = defineStore('settings', {
         mergeInMin: 3,
         mergeOutMax: 1,
         sinkMax: -1,
-        darkMode: false,
+        darkMode: true,
         showWelcome: true,
         welcomeScreenState: true,
     }),

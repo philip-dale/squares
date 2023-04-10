@@ -264,6 +264,25 @@ export const samplesStore = defineStore('samples', {
                 this.setLocalStorage()
             }
         },
+        containerContainsSelectedType(containerId) {
+            const settings = settingsStore()
+            const size = settings.getSize
+
+            for(const k of Object.keys(this.allSamples[containerId])) {
+                let matching = true
+                for (let x = 0; x < size.x; x++) {
+                    for (let y = 0; y < size.y; y++) {
+                        if(this.allSamples[containerId][k].parts[x][y] != this.allSamples[this.selected.parentId][this.selected.uid].parts[x][y]) {
+                            matching = false
+                        }
+                    }
+                }
+                if (matching) {
+                    return true
+                }
+            }
+            return false
+        },
         moveSelected(newContainerId) {
             if (this.selected.parentId != -1) {
                 if (this.selected.parentId != newContainerId) {
@@ -300,8 +319,16 @@ export const samplesStore = defineStore('samples', {
                 }
                 return "Single Colour Squares cannot be reused"
             } else if (this.hasSpace(newContainerId)) {
-                // console.log("Has Space", this.selected.parentId, this.selected.uid)
-                this.moveSelected(newContainerId)
+                if(this.selected.parentId != -1) {
+                    if(this.containerContainsSelectedType(newContainerId) && newContainerType != "spawn") {
+                        this.allSamples[this.selected.parentId][this.selected.uid].selected = false
+                        this.selected.parentId = -1
+                        this.selected.uid = -1
+                        return "Cannot merge matching samples together"
+                    } else {
+                        this.moveSelected(newContainerId)
+                    }
+                }
             } else {
                 if(this.selected.parentId != -1) {
                     this.allSamples[this.selected.parentId][this.selected.uid].selected = false

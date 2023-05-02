@@ -16,14 +16,14 @@ function createDefualtScoreboard() {
     for(let i=0; i<Object.keys(settings.getGameLevels).length; i++) {
         defaultScoreBoards["oneOfEach"][i] = {"id": (i+1).toString(), "scores": []}
         for(let j=0; j<10; j++) {
-            defaultScoreBoards["oneOfEach"][i]["scores"][j] = { "name": "", "time": 1000000000 }
+            defaultScoreBoards["oneOfEach"][i]["scores"][j] = { "name": "", "score": 0, "time": 1000000000 }
         }
     }
     defaultScoreBoards["challenge"] = [];
     for(let i=0; i<Object.keys(settings.getChallenges).length; i++) {
         defaultScoreBoards["challenge"][i] = {"id": (i+1).toString(), "scores": []}
         for(let j=0; j<10; j++) {
-            defaultScoreBoards["challenge"][i]["scores"][j] = { "name": "", "time": 1000000000 }
+            defaultScoreBoards["challenge"][i]["scores"][j] = { "name": "", "score": 0, "time": 1000000000 }
         }
     }
 }
@@ -71,14 +71,19 @@ export const scoreBoardStore = defineStore('scoreBoards', {
                             if( i+1 < scoresState.scoreBoards["oneOfEach"].length) {
                                 this.scoreBoards["oneOfEach"][i] = scoresState.scoreBoards["oneOfEach"][i]
                                 // this is a fix for score board issues. Remove in the future
-                                if(!("version" in scoresState)) {
-                                    for(let j=0; j<this.scoreBoards["oneOfEach"][i].scores.length; j++) {
-                                        
+                                for(let j=0; j<this.scoreBoards["oneOfEach"][i].scores.length; j++) {
+                                    if(!("score" in this.scoreBoards["oneOfEach"][i].scores[j])) {
+                                        this.scoreBoards["oneOfEach"][i].scores[j].score = 0;
+                                    }
+
+                                    if(!("version" in scoresState)) {
                                         if(this.scoreBoards["oneOfEach"][i].scores[j].time === 10000) {
                                             this.scoreBoards["oneOfEach"][i].scores[j].time = 1000000000
                                         }
                                     }
                                 }
+                                
+                                
                             }
                         }
                     }
@@ -87,14 +92,19 @@ export const scoreBoardStore = defineStore('scoreBoards', {
                             if( i+1 < scoresState.scoreBoards["challenge"].length) {
                                 this.scoreBoards["challenge"][i] = scoresState.scoreBoards["challenge"][i]
                                 // this is a fix for score board issues. Remove in the future
-                                if(!("version" in scoresState)) {
-                                    for(let j=0; j<this.scoreBoards["challenge"][i].scores.length; j++) {
+                                
+                                for(let j=0; j<this.scoreBoards["challenge"][i].scores.length; j++) {
+                                    if(!("score" in this.scoreBoards["challenge"][i].scores[j])) {
+                                        this.scoreBoards["challenge"][i].scores[j].score = 0;
+                                    }
+
+                                    if(!("version" in scoresState)) {
                                         if(this.scoreBoards["challenge"][i].scores[j].time === 10000) {
                                             this.scoreBoards["challenge"][i].scores[j].time = 1000000000
                                         }
                                     }
                                 }
-                            }
+                        }
                         }
                     }
                 }
@@ -126,7 +136,7 @@ export const scoreBoardStore = defineStore('scoreBoards', {
         },
         setLocalStorage() {
             var obj = new Object();
-            obj.version = 2
+            obj.version = 3
             obj.scoreBoards = this.scoreBoards
 
             localStorage.setItem("scores_state", JSON.stringify(obj))
@@ -136,8 +146,14 @@ export const scoreBoardStore = defineStore('scoreBoards', {
         },
         addScore(gameType, score, time, level) {
             if (gameType === "oneOfEach" || gameType === "challenge") {
-                this.scoreBoards[gameType][level - 1].scores.push({ "name": "", "time": time })
-                this.scoreBoards[gameType][level - 1].scores.sort(function (a, b) { return a.time - b.time })
+                this.scoreBoards[gameType][level - 1].scores.push({ "name": "", "score": score, "time": time })
+                this.scoreBoards[gameType][level - 1].scores.sort(function (a, b) {
+                    if (a.score === b.score) {
+                        return a.time - b.time
+                    } else {
+                        return b.score - a.score
+                    }
+                })
                 if (this.scoreBoards[gameType][level - 1].scores.length > 10) {
                     this.scoreBoards[gameType][level - 1].scores.pop()
                 }

@@ -62,7 +62,7 @@ export const settingsStore = defineStore('settings', {
         mergeInMin: 3,
         mergeOutMax: 1,
         sinkMax: -1,
-        darkMode: false,
+        darkMode: true,
         showWelcome: true,
         welcomeScreenState: true,
     }),
@@ -119,9 +119,10 @@ export const settingsStore = defineStore('settings', {
                 }
 
                 if("darkMode" in settingsState) {
-                    this.setDarkMode(settingsState.darkMode)
+                    this.darkMode = settingsState.darkMode;
                 }
             }
+            this.setDarkMode(this.darkMode)
         },
         setLocalStorage() {
             var obj = new Object();

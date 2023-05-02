@@ -16,7 +16,7 @@ export const gameStateStore = defineStore('gameState', {
         samplesCompleted: {},
         samplesCompletedAtLevel: {},
         spawnTimer: null,
-        gameType: "standard",
+        gameType: "continuous",
         gameLevel: 1,
         gamePaused: true,
         playTime: 0,
@@ -30,9 +30,17 @@ export const gameStateStore = defineStore('gameState', {
         },
         getTotalCompleted: (state) => {
             let total = 0
-            for(let i=0; i<state.getinputColours; i++) {
-                if(i.toString() in state.samplesCompleted ) {
-                    total += state.samplesCompleted[i.toString()]
+            if(state.gameType === "oneOfEach" || state.gameType === "challenge") {
+                for(let i=0; i<state.getinputColours; i++) {
+                    if(state.samplesCompletedAtLevel[i.toString()] > 0) {
+                        total += 1
+                    }
+                }
+            } else {
+                for(let i=0; i<state.getinputColours; i++) {
+                    if(i.toString() in state.samplesCompleted ) {
+                        total += state.samplesCompleted[i.toString()]
+                    }
                 }
             }
             return total
@@ -201,19 +209,21 @@ export const gameStateStore = defineStore('gameState', {
 
             if(this.gameType === "oneOfEach" || this.gameType === "challenge"){
                 let oneOfEach = true;
+                let oneOfEachCount = 0;
                 for(let i=0; i<this.getinputColours; i++) {
                     if(this.samplesCompletedAtLevel[i.toString()] === 0) {
                         oneOfEach = false
-                        break
+                    } else {
+                        oneOfEachCount += 1
                     }
                 }
                 if(oneOfEach) {
                     const board = scoreBoardStore()
                     if(this.gameType === "oneOfEach") {
-                        board.addScore(this.getGameType, -1, this.playTime, this.gameLevel)
+                        board.addScore(this.getGameType, oneOfEachCount, this.playTime, this.gameLevel)
                     }
                     if(this.gameType === "challenge") {
-                        board.addScore(this.getGameType, -1, this.playTime, this.challenge)
+                        board.addScore(this.getGameType, oneOfEachCount, this.playTime, this.challenge)
                     }
                     this.gameOver = true
                 }

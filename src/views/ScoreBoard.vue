@@ -22,14 +22,16 @@
             <v-window v-model="tabLevel">
               <v-window-item v-for="l in b.values" :value="l.id" v-bind:key="l">
                 <table>
-                  <tr>
-                    <th>Score</th>
-                    <th>Time</th>
-                  </tr>
-                  <tr v-for="s in l.scores" v-bind:key="s">
-                    <td>{{ s.score }}</td>
-                    <td>{{ s.time/10 }}s</td>
-                  </tr>
+                  <tbody>
+                    <tr>
+                      <th>Score</th>
+                      <th>Time</th>
+                    </tr>
+                    <tr v-for="s in l.scores" v-bind:key="s">
+                      <td>{{ s.score }}</td>
+                      <td>{{ s.time/10 }}s</td>
+                    </tr>
+                  </tbody>
                 </table>
               </v-window-item>
             </v-window>
@@ -37,14 +39,16 @@
         </v-card>
         <v-card v-else>
           <table>
-            <tr>
-              <th>Score</th>
-              <th>Time</th>
-            </tr>
-            <tr v-for="s in b.values" v-bind:key="s">
-              <td>{{ s.score }}</td>
-              <td>{{ s.time/10 }}s</td>
-            </tr>
+            <tbody>
+              <tr>
+                <th>Score</th>
+                <th>Time</th>
+              </tr>
+              <tr v-for="s in b.values" v-bind:key="s">
+                <td>{{ s.score }}</td>
+                <td>{{ s.time/10 }}s</td>
+              </tr>
+            </tbody>
           </table>
         </v-card>
       </v-window-item>
